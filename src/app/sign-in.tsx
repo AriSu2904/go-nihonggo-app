@@ -41,7 +41,7 @@ export default function LoginScreen() {
         <Image source={goNihonggoImg} className="size-[120px] rounded-lg" />
       </View>
 
-      <View className="mt-12">
+      <View className="mt-12 flex items-center">
         <Text className="text-2xl font-semibold">Go Nihonggo APP</Text>
         <Text className="text-gray-500">Masuk untuk masuk</Text>
       </View>
