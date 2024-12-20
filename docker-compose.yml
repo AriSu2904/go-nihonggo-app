@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:alpine
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: p3tki
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+
+  ms-auth:
+    image: cerrealkilla001/ms-auth:v1
+    container_name: auth-cnt
+    depends_on:
+      - postgres
+    ports:
+      - "3002:3002"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/p3tki
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+
+volumes:
+  postgres_data:

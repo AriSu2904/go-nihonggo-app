@@ -1,75 +1,94 @@
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { TextInput, Button, Text, Title } from "react-native-paper";
-import { Link } from "expo-router";
+import React from "react";
+import { View, Text } from "react-native";
+import { TextInput, Button } from "react-native-paper";
+import { Link, Redirect } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
+import { authSchema } from "@/schemas/authSchema";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRegister } from "@/queries/authQuery";
+import { useSnackbar } from "@/contexts/snackbar.context";
 
 export default function RegisterScreen() {
-  const { control } = useForm();
+  const snackbar = useSnackbar();
 
-  const handleRegister = () => {
-    console.log("test");
-  };
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(authSchema),
+  });
+
+  const { mutate, isPending } = useRegister({
+    onSuccess: () => {
+      snackbar.showSnackbar("Akun berhasil dibuat!, silahkan login");
+      return <Redirect href="/sign-in" />;
+    },
+    onError: (error) => {
+      if (error?.response?.data?.errors) {
+        snackbar.showSnackbar(error?.response?.data?.errors);
+      } else {
+        snackbar.showSnackbar("Gagal membuat akun, pastikan nim yang dimasukkan sudah benar!");
+      }
+    },
+  });
+
+  const handleRegister = handleSubmit((data) => {
+    return mutate(data);
+  });
 
   return (
-    <View style={styles.container}>
-      <Title style={styles.title}>Register</Title>
+    <View className="flex-1 p-4 justify-center">
+      <Text className="text-2xl font-semibold">Go Nihonggo APP</Text>
+      <Text className="text-gray-500">Daftar akun baru</Text>
 
-      <Controller
-        control={control}
-        name="nim"
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            label="Nim"
-            value={value}
-            onChangeText={onChange}
-            style={styles.input}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        )}
-      />
+      <View className="mt-8 flex gap-4">
+        <Controller
+          control={control}
+          name="studentId"
+          render={({ field: { onChange, value }, formState: { errors } }) => (
+            <View className="flex gap-2">
+              <TextInput
+                label="NIM"
+                value={value}
+                onChangeText={onChange}
+                error={!!errors?.studentId?.message}
+                keyboardType="number-pad"
+              />
 
-      <Controller
-        control={control}
-        name="password"
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            label="Password"
-            value={value}
-            onChangeText={onChange}
-            style={styles.input}
-            secureTextEntry
-          />
-        )}
-      />
-      <Button mode="contained" onPress={handleRegister} style={styles.button}>
-        Register
-      </Button>
+              {errors?.studentId?.message && (
+                <Text className="text-xs text-red-500">{errors?.studentId?.message}</Text>
+              )}
+            </View>
+          )}
+        />
 
-      <Link href="/sign-in" asChild>
-        <Button mode="text" style={styles.button}>
-          Sudah punya akun? Login
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, value }, formState: { errors } }) => (
+            <View className="flex gap-2">
+              <TextInput
+                label="Password"
+                value={value}
+                onChangeText={onChange}
+                secureTextEntry
+                error={!!errors?.password?.message}
+              />
+
+              {errors?.password?.message && (
+                <Text className="text-xs text-red-500">{errors?.password?.message}</Text>
+              )}
+            </View>
+          )}
+        />
+      </View>
+
+      <View className="mt-8 gap-4">
+        <Button loading={isPending} mode="contained" onPress={handleRegister}>
+          Register
         </Button>
-      </Link>
+
+        <Link href="/sign-in" asChild>
+          <Button mode="text">Sudah punya akun? Login</Button>
+        </Link>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 16,
-  },
-  title: {
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  input: {
-    marginBottom: 16,
-  },
-  button: {
-    marginTop: 8,
-  },
-});

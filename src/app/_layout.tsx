@@ -1,3 +1,5 @@
+import "./global.css";
+
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -10,6 +12,8 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { SessionProvider } from "@/contexts/auth.context";
+import { SnackbarProvider } from "@/contexts/snackbar.context";
+import GlobalSnackbar from "@/components/GlobalSnackbar";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -36,17 +40,20 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <PaperProvider>
-          <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-            <Stack>
-              <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-              <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-              <Stack.Screen name="(app)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-            <StatusBar style="auto" />
-          </ThemeProvider>
-        </PaperProvider>
+        <SnackbarProvider>
+          <PaperProvider>
+            <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+              <Stack>
+                <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+                <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+                <Stack.Screen name="(app)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+              <StatusBar style="auto" />
+              <GlobalSnackbar />
+            </ThemeProvider>
+          </PaperProvider>
+        </SnackbarProvider>
       </SessionProvider>
     </QueryClientProvider>
   );
