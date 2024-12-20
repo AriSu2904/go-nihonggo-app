@@ -8,6 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { PaperProvider } from "react-native-paper";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import * as SecureStore from "expo-secure-store";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -30,6 +31,8 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+
+      // SecureStore.deleteItemAsync("session-storage").then(() => console.log("test"));
     }
   }, [loaded]);
 

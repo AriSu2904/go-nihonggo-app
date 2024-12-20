@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { Link, router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
@@ -8,6 +8,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useLogin } from "@/queries/authQuery";
 import { useSnackbar } from "@/contexts/snackbar.context";
 import { useSession } from "@/contexts/auth.context";
+
+import goNihonggoImg from "@/assets/images/go-nihonggo.webp";
 
 export default function LoginScreen() {
   const { signIn } = useSession();
@@ -35,8 +37,14 @@ export default function LoginScreen() {
 
   return (
     <View className="flex-1 p-4 justify-center">
-      <Text className="text-2xl font-semibold">Go Nihonggo APP</Text>
-      <Text className="text-gray-500">Masuk untuk masuk</Text>
+      <View className="flex items-center">
+        <Image source={goNihonggoImg} className="size-[120px] rounded-lg" />
+      </View>
+
+      <View className="mt-12">
+        <Text className="text-2xl font-semibold">Go Nihonggo APP</Text>
+        <Text className="text-gray-500">Masuk untuk masuk</Text>
+      </View>
 
       <View className="mt-8 flex gap-4">
         <Controller
