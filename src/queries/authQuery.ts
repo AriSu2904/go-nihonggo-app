@@ -58,3 +58,13 @@ export const useLogin = ({
     },
   });
 };
+
+export const refreshAccessToken = async (refreshToken: string) => {
+  const response = await api.post<any, ApiResponse<LoginResponse>>("/auth/refresh", {
+    refreshToken,
+  });
+  if (response) {
+    console.log(response);
+  }
+  throw new Error("Failed to refresh token");
+};

@@ -2,7 +2,7 @@ import axios from "axios";
 // import createAuthRefreshInterceptor from "axios-auth-refresh";
 
 export const api = axios.create({
-  baseURL: "https://6vw2kgxauc.execute-api.us-east-2.amazonaws.com/api/v1",
+  baseURL: "http://192.168.1.10:3002/api/v1",
 });
 
 // const refreshAuthLogic = (failedRequest) =>

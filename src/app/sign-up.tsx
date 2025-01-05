@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-import { Link, Redirect } from "expo-router";
+import { Link, router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { authSchema } from "@/schemas/authSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,7 +20,7 @@ export default function RegisterScreen() {
   const { mutate, isPending } = useRegister({
     onSuccess: () => {
       snackbar.showSnackbar("Akun berhasil dibuat!, silahkan login");
-      return <Redirect href="/sign-in" />;
+      router.replace("/sign-in");
     },
     onError: (error) => {
       if (error?.response?.data?.errors) {
