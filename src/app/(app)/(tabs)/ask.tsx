@@ -2,8 +2,8 @@ import { Text, View } from "react-native";
 
 export default function AskScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Ask Question!</Text>
+    <View className="flex-1 justify-center items-center">
+    <Text className="font-poppins text-xl">Ask Question!</Text>
   </View>
   );
 }
