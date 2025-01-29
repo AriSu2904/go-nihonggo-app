@@ -15,6 +15,7 @@ export interface RegisterResponse {
 export interface LoginResponse {
   studentId: string;
   role: string;
+  nickname: string;
   token: string;
   refreshToken: string;
 }

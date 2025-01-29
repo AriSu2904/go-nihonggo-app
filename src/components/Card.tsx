@@ -4,9 +4,7 @@ import CustomText from "./TabText";
 
 interface CardProps {
   title: string;           // Judul card
-  content: string;         // Konten card
-  titleSize?: "sm" | "md" | "lg" | "xl"; // Ukuran font judul
-  contentSize?: "sm" | "md" | "lg" | "xl"; // Ukuran font konten
+  titleSize?: number;      // Ukuran font judul card
   backgroundColor?: string;  // Warna latar belakang card
   onPress?: (event: GestureResponderEvent) => void; // Fungsi saat card di-klik
   padding?: number;        // Padding card
@@ -14,24 +12,28 @@ interface CardProps {
   rounded?: string;       // rounding size
   disabled?: boolean;      // Apakah card dinonaktifkan
   children: React.ReactNode; // Konten card
+  justifyContent?: string;
+  alignItems?: string;
+  focused?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
   title,
-  content,
-  titleSize = "xl",         // Default
-  contentSize = "sm",       // Default
-  backgroundColor = "white", 
+  titleSize = 14,
+  backgroundColor = "bg-white", 
   onPress,
   padding = 6,
   borderRadius = 8,
   rounded = "2xl",
   disabled = false,
   children,
+  justifyContent = "center",
+  alignItems = "start",
+  focused = false,
 }) => {
   return (
-    <TouchableOpacity disabled={disabled} onPress={onPress} className={`bg-${backgroundColor} p-${padding} rounded-${borderRadius} shadow-md w-full rounded-${rounded} elevation-xl`}>
-      <CustomText fontSize={14} fontFamily="Poppins-SemiBold">
+    <TouchableOpacity disabled={disabled} onPress={onPress} className={`${backgroundColor} p-${padding} rounded-${borderRadius} shadow-md w-full rounded-${rounded} elevation-xl justify-${justifyContent} items-${alignItems}`}>
+      <CustomText focused={focused} fontSize={titleSize} fontFamily="Poppins-SemiBold">
         {title}
       </CustomText>
       {children}

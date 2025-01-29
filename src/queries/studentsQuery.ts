@@ -60,7 +60,6 @@ export const useStudentProfile = ({
   });
 };
 
-
 export const useStudentProfilePicture = ({
   onSuccess,
   onError,
@@ -95,6 +94,40 @@ export const useStudentProfilePicture = ({
           },
         }
       );
+    },
+    onSuccess: (data) => {
+      onSuccess && onSuccess(data);
+    },
+    onError: (error) => {
+      onError && onError(error);
+    },
+  });
+};
+
+export const useStudentProgressTracker = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: (data: ApiResponse<any>) => void;
+  onError?: (error: any) => void;
+}) => {
+  const { session } = useSession();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (!session?.token) {
+        throw new Error("No token available");
+      }
+
+      try {
+        return api.get<any, ApiResponse<any>>("/quizzes/tracker", {
+          headers: {
+            Authorization: `Bearer ${session.token}`,
+          },
+        });
+      } catch (error) {
+        console.error("Error occured:", error);
+      }
     },
     onSuccess: (data) => {
       onSuccess && onSuccess(data);
