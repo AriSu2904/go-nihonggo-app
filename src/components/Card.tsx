@@ -18,21 +18,18 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({
-  title,
+  title = "You dont have any progress, let's learn!",
   titleSize = 14,
   backgroundColor = "bg-white", 
   onPress,
-  padding = 6,
-  borderRadius = 8,
   rounded = "2xl",
   disabled = false,
   children,
-  justifyContent = "center",
-  alignItems = "start",
   focused = false,
 }) => {
   return (
-    <TouchableOpacity disabled={disabled} onPress={onPress} className={`${backgroundColor} p-${padding} rounded-${borderRadius} shadow-md w-full rounded-${rounded} elevation-xl justify-${justifyContent} items-${alignItems}`}>
+    <TouchableOpacity disabled={disabled} onPress={onPress} 
+    className={`${backgroundColor} rounded-${rounded} elevation-2xl py-3 my-2 justify-center items-center`}>
       <CustomText focused={focused} fontSize={titleSize} fontFamily="Poppins-SemiBold">
         {title}
       </CustomText>

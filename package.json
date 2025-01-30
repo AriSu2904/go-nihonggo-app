@@ -20,6 +20,7 @@
     "@hookform/resolvers": "^3.9.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
+    "@react-navigation/stack": "^7.1.1",
     "@tanstack/react-query": "^5.62.8",
     "axios": "^1.7.9",
     "axios-auth-refresh": "^3.3.6",

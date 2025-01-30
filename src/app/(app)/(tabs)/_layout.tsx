@@ -4,10 +4,26 @@ import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AskScreen from "./ask";
 import HomeScreen from ".";
+import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from "./profile";
 import CustomText from "@/components/TabText"; // Pastikan CustomText tersedia
+import MaterialScreen from "./material";
+import { BlurView } from "expo-blur";
 
 const Tab = createBottomTabNavigator();
+
+
+
+const HomeStack = createStackNavigator();
+
+function SectionHome() {
+  return (
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="HomeMain" component={HomeScreen} />
+      <HomeStack.Screen name="Material" component={MaterialScreen} />
+    </HomeStack.Navigator>
+  )
+}
 
 export default function Home() {
   return (
@@ -17,12 +33,14 @@ export default function Home() {
           tabBarStyle: {
             borderTopWidth: 0.2,
             height: 70,
-          },
+            position: "absolute",
+            backgroundColor: "white",
+          }
         }}
       >
         <Tab.Screen
           name="Home"
-          component={HomeScreen}
+          component={SectionHome}
           options={{
             tabBarIcon: ({ focused }) => (
               <Icon name="home-filled" color={focused ? "black" : "#9C4A4A"} size={32} />

@@ -52,7 +52,9 @@ export const useStudentProfile = ({
       });
     },
     onSuccess: (data) => {
-      onSuccess && onSuccess(data);
+      if (data) {
+        onSuccess && onSuccess(data);
+      }
     },
     onError: (error) => {
       onError && onError(error);
@@ -96,7 +98,9 @@ export const useStudentProfilePicture = ({
       );
     },
     onSuccess: (data) => {
-      onSuccess && onSuccess(data);
+      if (data) {
+        onSuccess && onSuccess(data);
+      }
     },
     onError: (error) => {
       onError && onError(error);
@@ -130,7 +134,9 @@ export const useStudentProgressTracker = ({
       }
     },
     onSuccess: (data) => {
-      onSuccess && onSuccess(data);
+      if (data) {
+        onSuccess && onSuccess(data);
+      }
     },
     onError: (error) => {
       onError && onError(error);
