@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, GestureResponderEvent } from "react-native";
 import CustomText from "./TabText";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 interface CardProps {
   title: string;           // Judul card
@@ -18,23 +19,26 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({
-  title = "You dont have any progress, let's learn!",
-  titleSize = 14,
+  title,
+  titleSize = 16,
   backgroundColor = "bg-white", 
-  onPress,
   rounded = "2xl",
-  disabled = false,
   children,
+  onPress,
   focused = false,
 }) => {
+  
   return (
-    <TouchableOpacity disabled={disabled} onPress={onPress} 
+    <View
     className={`${backgroundColor} rounded-${rounded} elevation-2xl py-3 my-2 justify-center items-center`}>
-      <CustomText focused={focused} fontSize={titleSize} fontFamily="Poppins-SemiBold">
+      <CustomText focused={focused} fontSize={titleSize} fontFamily="Poppins-SemiBold" >
         {title}
+        <TouchableOpacity onPress={onPress}>
+        <Icon name="help-outline" size={14} color="#333333" />
+        </TouchableOpacity>
       </CustomText>
       {children}
-    </TouchableOpacity>
+    </View>
   );
 };
 

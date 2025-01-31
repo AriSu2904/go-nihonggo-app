@@ -1,11 +1,9 @@
 import Card from "@/components/Card";
 import CustomText from "@/components/TabText";
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, ImageBackground } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import CenterAlert from "@/components/LogoutAlert";
+import { View, Text, ScrollView, ImageBackground } from "react-native";
+import CenterAlert from "@/components/CenterAlert";
 import { useSession } from "@/contexts/auth.context";
-import { router } from "expo-router";
 import { useStudentProgressTracker } from "@/queries/studentsQuery";
 import { MaterialResponse, useListMaterials } from "@/queries/materialsQuery";
 import { setMaterialBg } from "@/utils/dinamicBg";
@@ -16,6 +14,8 @@ import MaterialCard from "@/components/MaterialCard";
 const HomeScreen: React.FC = () => {
   const [materials, setMaterials] = useState<MaterialResponse[]>([]);
   const [progress, setProgress] = useState<any>(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertFor, setAlertFor] = useState<string>("");
   const { session } = useSession();
   const navigator = useNavigation<NativeStackNavigationProp<any>>();
 
@@ -45,25 +45,48 @@ const HomeScreen: React.FC = () => {
   }, []);
 
   return (
-    <ImageBackground source={require("../../../assets/images/jpn-bg.png")} style={{ flex: 1 }}>
+    <ImageBackground source={require('../../../assets/images/jpn-bg.png')} style={{ flex: 1 }}>
       <View className="flex-1 p-4">
+        {
+          (showAlert) && (
+            <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center z-50 bg-black/50">
+              <CenterAlert cancelOnly={true} onCancel={() => setShowAlert(false)} >
+                {alertFor === "KANJI N5" ? (
+                  <View>
+                    <CustomText fontSize={16} focused={true} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
+                      Coooming sooon  ⚒️
+                    </CustomText>
+                    <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular">
+                      You still can learn other materials  ✅
+                    </CustomText>
+                  </View>
+                ) : (
+                    <CustomText fontSize={14} focused={true} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
+                      Your progress will be shown below by doing the quiz 📝
+                    </CustomText>
+                )}
+              </CenterAlert>
+            </View>
+          )}
         <View className="px-3 mt-20">
           <CustomText fontSize={24} focused={true} fontFamily="Poppins-SemiBold">
             Welcome, {session?.nickname}!
           </CustomText>
-          <CustomText fontSize={18} focused={true} fontFamily="Poppins-Regular" >
-            Ready to learn today? 📌
+          <CustomText fontSize={18} focused={true} fontFamily="Poppins-Regular">
+            Ready to learn today? <Text style={{ fontSize: 22 }}>🔥</Text>
           </CustomText>
           <View className="mx-1 mt-3">
-            {progress ? (
-              null
-            ) : (
-              <Card disabled title="You don't have any progres" borderRadius={2} alignItems="center" justifyContent="center">
-                <CustomText fontSize={14} focused={true} fontFamily="Poppins-Medium">
-                  Let's learn 🚀
-                </CustomText>
-              </Card>
-            )}
+            <Card focused={true} title="Your progress" borderRadius={2} alignItems="center"
+              justifyContent="center"
+              onPress={() => {
+                setShowAlert(true);
+                setAlertFor("PROGRESS");
+                return;
+              }}>
+              <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular">
+                {progress?.total}
+              </CustomText>
+            </Card>
           </View>
         </View>
         <View className="mt-4 justify-center items-center bg-">
@@ -71,18 +94,24 @@ const HomeScreen: React.FC = () => {
             Materials
           </CustomText>
         </View>
-        <ScrollView className="px-2">
+        <ScrollView className="px-5">
           {materials.map((item) => (
-            <View className="mt-3" key={item.order}>
+            <View className="mt-3 justify-center" key={item.order}>
               <MaterialCard
                 key={item.order}
                 title={item.original}
-                romaji={item.name}
+                titleSize={30}
                 focused={true}
-                children={undefined}
+                romaji={item.name}
+                children={null}
                 backgroundColor={setMaterialBg(item.name)}
                 onPress={() => {
-                  navigator.navigate("Material" as never, { title: item.name });
+                  if (item.name.toUpperCase() === "KANJI N5") {
+                    setShowAlert(true);
+                    setAlertFor(item.name);
+                    return;
+                  }
+                  navigator.navigate('Material', { title: item.name });
                 }}
               />
             </View>

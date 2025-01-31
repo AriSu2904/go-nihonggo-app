@@ -8,7 +8,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from "./profile";
 import CustomText from "@/components/TabText"; // Pastikan CustomText tersedia
 import MaterialScreen from "./material";
-import { BlurView } from "expo-blur";
 
 const Tab = createBottomTabNavigator();
 
@@ -43,7 +42,7 @@ export default function Home() {
           component={SectionHome}
           options={{
             tabBarIcon: ({ focused }) => (
-              <Icon name="home-filled" color={focused ? "black" : "#9C4A4A"} size={32} />
+              <Icon name="home-filled" color={focused ? "#333333" : "#999999"} size={32} />
             ),
             tabBarLabel: ({ focused }) => (
               <View style={{ flexDirection: "column", alignItems: "center", marginTop: 8 }}>
@@ -59,7 +58,7 @@ export default function Home() {
           component={AskScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <Icon name={focused ? "messenger" : "messenger-outline"} color={focused ? "black" : "#9C4A4A"} size={32} />
+              <Icon name={focused ? "messenger" : "messenger-outline"} color={focused ? "#333333" : "#999999"} size={32} />
             ),
             tabBarLabel: ({ focused }) => (
               <View style={{ flexDirection: "column", alignItems: "center", marginTop: 8 }}>
@@ -75,7 +74,7 @@ export default function Home() {
           component={ProfileScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <Icon name={focused ? "person" : "person-outline"} color={focused ? "black" : "#9C4A4A"} size={32} />
+              <Icon name={focused ? "person" : "person-outline"} color={focused ? "#333333" : "#999999"} size={32} />
             ),
             tabBarLabel: ({ focused }) => (
               <View style={{ flexDirection: "column", alignItems: "center", marginTop: 8 }}>

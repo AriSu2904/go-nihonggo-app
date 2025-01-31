@@ -10,7 +10,7 @@ interface TextProps {
 }
 
 const CustomText: React.FC<TextProps> = ({ children, fontFamily, fontSize, focused, style, ...props }) => {
-  const textColor = focused ? "black" : "#9C4A4A";
+  const textColor = focused ? "#333333" : "#999999";
 
   return (
     <Text
