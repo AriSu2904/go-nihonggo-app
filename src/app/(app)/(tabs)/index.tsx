@@ -1,7 +1,7 @@
 import Card from "@/components/Card";
 import CustomText from "@/components/TabText";
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, ImageBackground } from "react-native";
+import { View, Text, ScrollView, ImageBackground, SafeAreaView } from "react-native";
 import CenterAlert from "@/components/CenterAlert";
 import { useSession } from "@/contexts/auth.context";
 import { useStudentProgressTracker } from "@/queries/studentsQuery";
@@ -10,13 +10,14 @@ import { setMaterialBg } from "@/utils/dinamicBg";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import MaterialCard from "@/components/MaterialCard";
+import BackButton from "@/components/backButton";
 
 const HomeScreen: React.FC = () => {
   const [materials, setMaterials] = useState<MaterialResponse[]>([]);
   const [progress, setProgress] = useState<any>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertFor, setAlertFor] = useState<string>("");
-  const { session } = useSession();
+  const { session, signOut } = useSession();
   const navigator = useNavigation<NativeStackNavigationProp<any>>();
 
   const { mutate: fetchProgress, isPending } = useStudentProgressTracker({
@@ -45,7 +46,8 @@ const HomeScreen: React.FC = () => {
   }, []);
 
   return (
-    <ImageBackground source={require('../../../assets/images/jpn-bg.png')} style={{ flex: 1 }}>
+    <SafeAreaView className="flex-1 bg-[#F8F9FA]">
+      <BackButton backgroundColor="#333333" onPress={() => signOut() } />
       <View className="flex-1 p-4">
         {
           (showAlert) && (
@@ -118,7 +120,7 @@ const HomeScreen: React.FC = () => {
           ))}
         </ScrollView>
       </View>
-    </ImageBackground>
+    </SafeAreaView>
   );
 }
 

@@ -8,10 +8,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from "./profile";
 import CustomText from "@/components/TabText"; // Pastikan CustomText tersedia
 import MaterialScreen from "./material";
+import LetterScreen from "./letter";
+import QuizScreen from "./quiz";
 
 const Tab = createBottomTabNavigator();
-
-
 
 const HomeStack = createStackNavigator();
 
@@ -20,6 +20,8 @@ function SectionHome() {
     <HomeStack.Navigator screenOptions={{ headerShown: false }}>
       <HomeStack.Screen name="HomeMain" component={HomeScreen} />
       <HomeStack.Screen name="Material" component={MaterialScreen} />
+      <HomeStack.Screen name="Letter" component={LetterScreen} />
+      <HomeStack.Screen name="Quiz" component={QuizScreen} />
     </HomeStack.Navigator>
   )
 }

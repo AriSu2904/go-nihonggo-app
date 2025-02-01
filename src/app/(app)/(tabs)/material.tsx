@@ -1,9 +1,11 @@
+import BackButton from "@/components/backButton";
 import CenterAlert from "@/components/CenterAlert";
 import CustomText from "@/components/TabText";
 import { useMaterialContent } from "@/queries/materialsQuery";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { SafeAreaView, View, FlatList, TouchableOpacity, Image, Text } from "react-native";
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function MaterialScreen() {
@@ -11,8 +13,9 @@ export default function MaterialScreen() {
     const { title } = route.params as { title: string };
     const [contents, setContents] = useState<any[]>([]);
     const [showAlert, setShowAlert] = useState(false);
+    const [materialForQuiz, setMaterialForQuiz] = useState<any[]>([]);
     const [material, setMaterial] = useState<string>("");
-    const navigation = useNavigation();
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const { mutate: fetchContent, isPending } = useMaterialContent({
         onSuccess: ({ data }) => {
@@ -31,13 +34,9 @@ export default function MaterialScreen() {
     return (
         <SafeAreaView className="flex-1 bg-[#F8F9FA]">
             { /* back button */}
-            <TouchableOpacity 
-                onPress={() => navigation.goBack()} 
-                className="absolute top-6 left-6 p-3 rounded-full"
-                style={{ backgroundColor: "#9C4A4A" }}
-            >
-                <Icon name="arrow-back" size={24} color="white" />
-            </TouchableOpacity>
+            <View className="mt-7">
+                <BackButton onPress={() => navigation.goBack()} backgroundColor="#9C4A4A" />
+            </View>
 
             {/* Alert */}
             {showAlert && (
@@ -46,14 +45,36 @@ export default function MaterialScreen() {
                         <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular">
                             <View className="justify-center items-center">
                                 <CustomText fontSize={16} focused={false} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
-                                    {material === "Dakuten" ? "Dakuten (゛)" : "Handakuten (゜)"}
+                                    {material === "Ten&Maru" ? "Tenten (゛) & Maru (゜)" : "Yōon (拗音)"}
                                 </CustomText>
                                 <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular" style={{ textAlign: 'center' }}>
-                                    is a symbol that is used to change the pronunciation of a character. It is placed at the upper right corner of the character.
+                                    {material === "Ten&Maru" ? "Tenten (゛) and Maru (゜) are diacritics used in the Japanese writing system to indicate that the consonant of a syllable should be pronounced voiced, or that a voiceless consonant should be pronounced with a nasal sound." : "Yōon (拗音) are kana characters that represent a combination of two sounds, usually a consonant followed by a glide."}
                                 </CustomText>
-                                <Image source={material === "Dakuten" ? require("../../../assets/images/dakuten.png") : require("../../../assets/images/handakuten.png")}
-                                    resizeMode="stretch"
-                                    className="w-40 h-36 rounded-3xl my-2" />
+                                {material === "Ten&Maru" ? (
+                                    title === "HIRAGANA" ? (
+                                        <View className="flex-row justify-center items-center">
+                                            <Image source={require("../../../assets/images/dakuten.png")}
+                                                resizeMode="stretch"
+                                                className="w-40 h-36 rounded-3xl my-2" />
+                                            <Image source={require("../../../assets/images/handakuten.png")}
+                                                resizeMode="stretch"
+                                                className="w-40 h-36 rounded-3xl my-2" />
+                                        </View>
+                                    ) : (
+                                        <View>
+                                            <Text>Katakana</Text>
+                                        </View>
+                                    )
+                                ) : (
+                                    <View>
+                                        <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular" style={{ textAlign: 'center' }}>
+                                            {`Example in ${title}`}
+                                        </CustomText>
+                                        <CustomText fontSize={18} focused={true} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center', marginTop: 10 }}>
+                                            {title === "HIRAGANA" ? "きょ (Kyo)" : "キョ (Kyo)"}
+                                        </CustomText>
+                                    </View>
+                                )}
                             </View>
                         </CustomText>
                     </CenterAlert>
@@ -80,7 +101,10 @@ export default function MaterialScreen() {
                     <View>
                         <TouchableOpacity
                             className="rounded-2xl"
-                            onPress={() => alert("Coming soon!")}
+                            onPress={() => {
+                                item.name === "Quiz" ? navigation.navigate('Quiz', { material: title, contents })
+                                    : navigation.navigate('Letter', { materialName: title, level: item.position })
+                            }}
                         >
                             <View className="rounded-2xl">
                                 <Image
@@ -99,7 +123,7 @@ export default function MaterialScreen() {
                                 </CustomText>
 
                                 {/* Tampilkan ikon hanya jika item.name adalah "Dakuten" atau "Handakuten" */}
-                                {(item.name === "Dakuten" || item.name === "Handakuten") && (
+                                {(item.name === "Ten&Maru" || item.name === "Yōon") && (
                                     <TouchableOpacity className="ml-1"
                                         onPress={() => {
                                             setShowAlert(true);
