@@ -1,9 +1,10 @@
 import BackButton from "@/components/BackButton";
+import BackgroundImage from "@/components/BackgroundImage";
 import CenterAlert from "@/components/CenterAlert";
 import CustomText from "@/components/TabText";
 import { mockData } from "@/lib/dev/mock-data";
 import { useMaterialContent } from "@/queries/materialsQuery";
-import styles from "@/utils/globalStyle";
+import styles, { backgroundScreen, COLORS, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 import style from "@/utils/globalStyle";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ export default function MaterialScreen() {
     const [materialForQuiz, setMaterialForQuiz] = useState<any[]>([]);
     const [material, setMaterial] = useState<string>("");
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
+    const [backButtonColor] = useState(RANDOM_LIGHT_COLOR());
 
     const { mutate: fetchContent, isPending } = useMaterialContent({
         onSuccess: ({ data }) => {
@@ -39,20 +41,24 @@ export default function MaterialScreen() {
     }, []);
 
     return (
-        <SafeAreaView className="flex-1 bg-[#F8F9FA]">
+        <SafeAreaView className={`flex-1 bg-[${backgroundScreen}]`}>
+            <View>
+                <BackgroundImage/>
+            </View>
+
             { /* back button */}
-            <BackButton onPress={() => navigation.goBack()} backgroundColor="#9C4A4A" />
+            <BackButton onPress={() => navigation.goBack()} backgroundColor={backButtonColor} />
 
             {/* Alert */}
             {showAlert && (
-                <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center z-50 bg-black/50">
+                <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center z-50 bg-slate-800/50">
                     <CenterAlert cancelOnly={true} onCancel={() => setShowAlert(false)} >
-                        <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular">
+                        <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-Regular">
                             <View className="justify-center items-center">
-                                <CustomText fontSize={16} focused={false} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
+                                <CustomText fontSize={16} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
                                     {material === "Ten&Maru" ? "Tenten (゛) & Maru (゜)" : "Yōon (拗音)"}
                                 </CustomText>
-                                <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular" style={{ textAlign: 'center' }}>
+                                <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-Regular" style={{ textAlign: 'center' }}>
                                     {material === "Ten&Maru" ? "Tenten (゛) and Maru (゜) are diacritics used in the Japanese writing system to indicate that the consonant of a syllable should be pronounced voiced, or that a voiceless consonant should be pronounced with a nasal sound." : "Yōon (拗音) are kana characters that represent a combination of two sounds, usually a consonant followed by a glide."}
                                 </CustomText>
                                 {material === "Ten&Maru" ? (
@@ -72,10 +78,10 @@ export default function MaterialScreen() {
                                     )
                                 ) : (
                                     <View>
-                                        <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular" style={{ textAlign: 'center' }}>
+                                        <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-Regular" style={{ textAlign: 'center' }}>
                                             {`Example in ${title}`}
                                         </CustomText>
-                                        <CustomText fontSize={18} focused={true} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center', marginTop: 10 }}>
+                                        <CustomText fontSize={18} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center', marginTop: 10 }}>
                                             {title === "HIRAGANA" ? "きょ (Kyo)" : "キョ (Kyo)"}
                                         </CustomText>
                                     </View>
@@ -91,10 +97,10 @@ export default function MaterialScreen() {
             <View className="p-4 justify-center items-center"
                 style={style.screen}
             >
-                <CustomText fontSize={24} focused={true} fontFamily="Poppins-SemiBold">
+                <CustomText fontSize={24} fontFamily="Poppins-SemiBold">
                     {title}
                 </CustomText>
-                <CustomText fontSize={20} focused={true} fontFamily="Poppins-Regular">
+                <CustomText fontSize={20} fontFamily="Poppins-Regular">
                     Choose a section
                 </CustomText>
             </View>
@@ -126,7 +132,7 @@ export default function MaterialScreen() {
                             {/* Teks */}
                             <View className="justify-center items-center w-48 p-2">
                                 <View className="flex-row justify-between">
-                                    <CustomText fontSize={16} focused={true} fontFamily="Poppins-SemiBold">
+                                    <CustomText fontSize={16} fontFamily="Poppins-SemiBold">
                                         {item.name}
                                     </CustomText>
 
@@ -138,12 +144,12 @@ export default function MaterialScreen() {
                                                 setMaterial(item.name);
                                             }}
                                         >
-                                            <Icon name="help-outline" color="black" size={15} />
+                                            <Icon name="help-outline" color="white" size={15} />
                                         </TouchableOpacity>
                                     )}
                                 </View>
 
-                                <CustomText fontSize={13} focused={true} fontFamily="Poppins-Regular" style={{ textAlign: "center" }}>
+                                <CustomText fontSize={13} fontFamily="Poppins-Regular" style={{ textAlign: "center" }}>
                                     {item.description}
                                 </CustomText>
                             </View>

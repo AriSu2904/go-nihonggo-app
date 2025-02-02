@@ -152,3 +152,39 @@ export const hasHistoryInCurrentSection = (history: any[], section: string) => {
 
     return false;
 };
+
+const perfectScoreMessages = [
+    "🔥 GG! You're a genius!",
+    "🎯 100%! you're unstoppable!",
+    "🚀 Perfect! You're on fire!",
+    "🏆 Flawless victory!",
+    "🌟 You nailed it all!"
+];
+
+const highScoreMessages = [
+    "💪 Great job!",
+    "🔥 Solid effort!",
+    "🚀 Almost there!",
+    "🎯 Well played!",
+    "🏆 Impressive!"
+];
+
+const lowScoreMessages = [
+    "📚 Every mistake is a lesson!",
+    "🔥 you're learning and improving!",
+    "💪 A bit more practice and you’ll ace it!",
+    "🚀 Progress takes time! Keep at it!",
+    "🎯 The next one will be better!"
+];
+
+export function randomMessageContext (score: number, totalQuestions: number) {
+    const percentage = (score / totalQuestions) * 100;
+
+    if (percentage === 100) {
+        return perfectScoreMessages[Math.floor(Math.random() * perfectScoreMessages.length)];
+    } else if (percentage > 50) {
+        return highScoreMessages[Math.floor(Math.random() * highScoreMessages.length)];
+    } else {
+        return lowScoreMessages[Math.floor(Math.random() * lowScoreMessages.length)];
+    }
+};

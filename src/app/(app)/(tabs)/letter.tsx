@@ -8,6 +8,8 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { LetterResponse, useListLetters } from '@/queries/lettersQuery';
 import CustomText from '@/components/TabText';
 import { Audio } from 'expo-av';
+import { backgroundScreen, fontColors, RANDOM_LIGHT_COLOR } from '@/utils/globalStyle';
+import BackgroundImage from '@/components/BackgroundImage';
 
 
 interface LetterDetailProps {
@@ -36,6 +38,7 @@ const LetterScreen = () => {
     const [showDetail, setShowDetail] = useState(false);
     const [imageDetail, setImageDetail] = useState<{imageUrl: string, audioUri: string}>();
     const [sound, setSound] = useState<any>(null);
+    const [backButtonColor] = useState(RANDOM_LIGHT_COLOR());
 
     const playAudio = async () => {
         if(imageDetail?.imageUrl) {
@@ -88,9 +91,13 @@ const LetterScreen = () => {
     };
 
     return (
-        <SafeAreaView className="bg-gray-100 flex-1">
+        <SafeAreaView className={`flex-1 bg-[${backgroundScreen}]`}>
+            <View>
+                <BackgroundImage />
+            </View>
+
             {/* Back Button */}
-                <BackButton onPress={() => navigation.goBack()} backgroundColor="#333333" />
+                <BackButton onPress={() => navigation.goBack()} backgroundColor={backButtonColor} iconColor='#000000' />
 
             {/* Alert */}
             {showDetail && imageDetail && (
@@ -101,7 +108,7 @@ const LetterScreen = () => {
                             className="flex-1 bg-[#f58383] rounded-xl py-2"
                                 style={{ maxWidth: '60%'}}
                             >
-                                <CustomText fontSize={15} focused={true} fontFamily="Poppins-Medium" style={{ textAlign: 'center' }}>
+                                <CustomText fontSize={15} fontColor={fontColors.black} fontFamily="Poppins-Medium" style={{ textAlign: 'center' }}>
                                     Close
                                 </CustomText>
                             </TouchableOpacity>

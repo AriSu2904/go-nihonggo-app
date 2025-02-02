@@ -12,7 +12,8 @@ import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/n
 import MaterialCard from "@/components/MaterialCard";
 import BackButton from "@/components/BackButton";
 import { mockData } from "@/lib/dev/mock-data";
-import styles from "@/utils/globalStyle";
+import styles, { backgroundScreen, fontColors } from "@/utils/globalStyle";
+import BackgroundImage from "@/components/BackgroundImage";
 
 const HomeScreen: React.FC = () => {
   const [materials, setMaterials] = useState<MaterialResponse[]>([]);
@@ -52,8 +53,12 @@ const HomeScreen: React.FC = () => {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F8F9FA]">
-      <BackButton backgroundColor="#333333" onPress={() => signOut()} />
+    <SafeAreaView className={`flex-1 bg-[${backgroundScreen}]`}>
+      {/* Background Image */}
+      <View>
+        <BackgroundImage />
+      </View>
+      {/* <BackButton backgroundColor="#333333" onPress={() => signOut()} /> */}
       <View className="flex-1 p-4">
         {
           (showAlert) && (
@@ -61,15 +66,15 @@ const HomeScreen: React.FC = () => {
               <CenterAlert cancelOnly={true} onCancel={() => setShowAlert(false)} >
                 {alertFor === "KANJI N5" ? (
                   <View>
-                    <CustomText fontSize={16} focused={true} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
+                    <CustomText fontSize={16} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
                       Coooming sooon  ⚒️
                     </CustomText>
-                    <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular">
+                    <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-Regular">
                       You still can learn other materials  ✅
                     </CustomText>
                   </View>
                 ) : (
-                  <CustomText fontSize={14} focused={true} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
+                  <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
                     Your progress will be shown below by completing the quiz 📝
                   </CustomText>
                 )}
@@ -77,10 +82,10 @@ const HomeScreen: React.FC = () => {
             </View>
           )}
         <View className="px-3" style={styles.screen}>
-          <CustomText fontSize={24} focused={true} fontFamily="Poppins-SemiBold">
+          <CustomText fontSize={24} fontFamily="Poppins-SemiBold">
             Welcome, {session?.nickname}!
           </CustomText>
-          <CustomText fontSize={18} focused={true} fontFamily="Poppins-Regular">
+          <CustomText fontSize={18} fontFamily="Poppins-Regular">
             Ready to learn today? <Text style={{ fontSize: 22 }}>🔥</Text>
           </CustomText>
           <View className="mx-1 mt-3">
@@ -92,7 +97,7 @@ const HomeScreen: React.FC = () => {
                 return;
               }}>
               <View className="flex-row justify-between items-center">
-                <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular">
+                <CustomText fontSize={14} fontColor="#000" fontFamily="Poppins-Regular">
                   {progress?.highestScore}
                 </CustomText>
               </View>
@@ -100,7 +105,7 @@ const HomeScreen: React.FC = () => {
           </View>
         </View>
         <View className="mt-4 justify-center items-center bg-">
-          <CustomText fontSize={18} focused={true} fontFamily="Poppins-SemiBold">
+          <CustomText fontSize={18} fontFamily="Poppins-SemiBold">
             Materials
           </CustomText>
         </View>

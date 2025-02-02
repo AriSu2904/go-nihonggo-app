@@ -16,6 +16,7 @@ interface CardProps {
   justifyContent?: string;
   alignItems?: string;
   focused?: boolean;
+  titleColor?: string,
 }
 
 const Card: React.FC<CardProps> = ({
@@ -25,13 +26,13 @@ const Card: React.FC<CardProps> = ({
   rounded = "2xl",
   children,
   onPress,
-  focused = false,
+  titleColor = "black",
 }) => {
   
   return (
     <View
     className={`${backgroundColor} rounded-${rounded} elevation-2xl py-3 my-2 justify-center items-center`}>
-      <CustomText focused={focused} fontSize={titleSize} fontFamily="Poppins-SemiBold" >
+      <CustomText fontColor={titleColor} fontSize={titleSize} fontFamily="Poppins-SemiBold" >
         {title}
         <TouchableOpacity onPress={onPress}>
         <Icon name="help-outline" size={14} color="#333333" />

@@ -12,6 +12,7 @@ import LetterScreen from "./letter";
 import QuizScreen from "./quiz";
 import QuizDetailScreen from "./quizDetail";
 import QuestionScreen from "./question";
+import { fontColors } from "@/utils/globalStyle";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,7 +53,7 @@ export default function Home() {
             ),
             tabBarLabel: ({ focused }) => (
               <View style={{ flexDirection: "column", alignItems: "center", marginTop: 8 }}>
-                <CustomText focused={focused} fontSize={13}>
+                <CustomText fontColor={fontColors.black} fontSize={13}>
                   Home
                 </CustomText>
               </View>
@@ -68,7 +69,7 @@ export default function Home() {
             ),
             tabBarLabel: ({ focused }) => (
               <View style={{ flexDirection: "column", alignItems: "center", marginTop: 8 }}>
-                <CustomText focused={focused} fontSize={13}>
+                <CustomText fontColor={fontColors.black} fontSize={13}>
                   Ask
                 </CustomText>
               </View>
@@ -84,7 +85,7 @@ export default function Home() {
             ),
             tabBarLabel: ({ focused }) => (
               <View style={{ flexDirection: "column", alignItems: "center", marginTop: 8 }}>
-                <CustomText focused={focused} fontSize={13}>
+                <CustomText fontColor={fontColors.black} fontSize={13}>
                   Profile
                 </CustomText>
               </View>
