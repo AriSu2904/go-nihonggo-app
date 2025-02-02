@@ -4,17 +4,19 @@ import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, ImageBackground, SafeAreaView } from "react-native";
 import CenterAlert from "@/components/CenterAlert";
 import { useSession } from "@/contexts/auth.context";
-import { useStudentProgressTracker } from "@/queries/studentsQuery";
+import { StudentProgressResponse, useStudentProgressTracker } from "@/queries/studentsQuery";
 import { MaterialResponse, useListMaterials } from "@/queries/materialsQuery";
-import { setMaterialBg } from "@/utils/dinamicBg";
+import { setMaterialBg } from "@/utils/reverseUtil";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import MaterialCard from "@/components/MaterialCard";
-import BackButton from "@/components/backButton";
+import BackButton from "@/components/BackButton";
+import { mockData } from "@/lib/dev/mock-data";
+import styles from "@/utils/globalStyle";
 
 const HomeScreen: React.FC = () => {
   const [materials, setMaterials] = useState<MaterialResponse[]>([]);
-  const [progress, setProgress] = useState<any>(null);
+  const [progress, setProgress] = useState<StudentProgressResponse>();
   const [showAlert, setShowAlert] = useState(false);
   const [alertFor, setAlertFor] = useState<string>("");
   const { session, signOut } = useSession();
@@ -41,13 +43,17 @@ const HomeScreen: React.FC = () => {
   });
 
   useEffect(() => {
-    // fetchProgress();
-    fetchMaterials();
+    fetchProgress();
+    // fetchMaterials();
+
+    const materialMock = mockData.home;
+
+    setMaterials(materialMock.data);
   }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-[#F8F9FA]">
-      <BackButton backgroundColor="#333333" onPress={() => signOut() } />
+      <BackButton backgroundColor="#333333" onPress={() => signOut()} />
       <View className="flex-1 p-4">
         {
           (showAlert) && (
@@ -63,14 +69,14 @@ const HomeScreen: React.FC = () => {
                     </CustomText>
                   </View>
                 ) : (
-                    <CustomText fontSize={14} focused={true} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
-                      Your progress will be shown below by doing the quiz 📝
-                    </CustomText>
+                  <CustomText fontSize={14} focused={true} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
+                    Your progress will be shown below by completing the quiz 📝
+                  </CustomText>
                 )}
               </CenterAlert>
             </View>
           )}
-        <View className="px-3 mt-20">
+        <View className="px-3" style={styles.screen}>
           <CustomText fontSize={24} focused={true} fontFamily="Poppins-SemiBold">
             Welcome, {session?.nickname}!
           </CustomText>
@@ -85,9 +91,11 @@ const HomeScreen: React.FC = () => {
                 setAlertFor("PROGRESS");
                 return;
               }}>
-              <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular">
-                {progress?.total}
-              </CustomText>
+              <View className="flex-row justify-between items-center">
+                <CustomText fontSize={14} focused={true} fontFamily="Poppins-Regular">
+                  {progress?.highestScore}
+                </CustomText>
+              </View>
             </Card>
           </View>
         </View>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, FlatList, View, TouchableOpacity, Text, Image } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from 'expo-router';
-import BackButton from '@/components/backButton';
+import BackButton from '@/components/BackButton';
 import RoundedBox from '@/components/RoundedBox';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { LetterResponse, useListLetters } from '@/queries/lettersQuery';
@@ -71,7 +71,6 @@ const LetterScreen = () => {
         letters.forEach((item, index) => {
             const numColumns = item.order >= 40 ? 3 : 5;
 
-            // Jika jumlah kolom berubah, masukkan row sebelumnya ke hasil dan buat row baru
             if (tempRow.length === currentColumns || numColumns !== currentColumns) {
                 result.push(tempRow);
                 tempRow = [];
@@ -81,7 +80,6 @@ const LetterScreen = () => {
             tempRow.push(item);
         });
 
-        // Tambahkan row terakhir jika masih ada item yang tersisa
         if (tempRow.length > 0) {
             result.push(tempRow);
         }
@@ -92,9 +90,7 @@ const LetterScreen = () => {
     return (
         <SafeAreaView className="bg-gray-100 flex-1">
             {/* Back Button */}
-            <View style={{ height: 70 }} className='mt-7'>
                 <BackButton onPress={() => navigation.goBack()} backgroundColor="#333333" />
-            </View>
 
             {/* Alert */}
             {showDetail && imageDetail && (

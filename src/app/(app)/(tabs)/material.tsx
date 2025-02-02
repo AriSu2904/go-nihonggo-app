@@ -1,10 +1,13 @@
-import BackButton from "@/components/backButton";
+import BackButton from "@/components/BackButton";
 import CenterAlert from "@/components/CenterAlert";
 import CustomText from "@/components/TabText";
+import { mockData } from "@/lib/dev/mock-data";
 import { useMaterialContent } from "@/queries/materialsQuery";
+import styles from "@/utils/globalStyle";
+import style from "@/utils/globalStyle";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { SafeAreaView, View, FlatList, TouchableOpacity, Image, Text } from "react-native";
+import { SafeAreaView, View, FlatList, TouchableOpacity, Image, Text, ScrollView } from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -28,15 +31,17 @@ export default function MaterialScreen() {
     });
 
     useEffect(() => {
-        fetchContent(title);
+        // fetchContent(title);
+
+        const materialMock = mockData.material;
+
+        setContents(materialMock(title).data);
     }, []);
 
     return (
         <SafeAreaView className="flex-1 bg-[#F8F9FA]">
             { /* back button */}
-            <View className="mt-7">
-                <BackButton onPress={() => navigation.goBack()} backgroundColor="#9C4A4A" />
-            </View>
+            <BackButton onPress={() => navigation.goBack()} backgroundColor="#9C4A4A" />
 
             {/* Alert */}
             {showAlert && (
@@ -83,7 +88,9 @@ export default function MaterialScreen() {
 
             {/* Judul */}
 
-            <View className="mt-12 p-4 justify-center items-center">
+            <View className="p-4 justify-center items-center"
+                style={style.screen}
+            >
                 <CustomText fontSize={24} focused={true} fontFamily="Poppins-SemiBold">
                     {title}
                 </CustomText>
@@ -91,57 +98,59 @@ export default function MaterialScreen() {
                     Choose a section
                 </CustomText>
             </View>
+            <View className="flex-1">
+                <FlatList
+                    data={contents}
+                    keyExtractor={(item, index) => index.toString()}
+                    numColumns={2}
+                    columnWrapperStyle={{ justifyContent: "space-evenly" }}
+                    contentContainerStyle={styles.bottom}
+                    renderItem={({ item }) => (
+                        <View>
+                            <TouchableOpacity
+                                className="rounded-2xl"
+                                onPress={() => {
+                                    item.name === "Quiz" ? navigation.navigate('Quiz', { material: title, contents })
+                                        : navigation.navigate('Letter', { materialName: title, level: item.position })
+                                }}
+                            >
+                                <View className="rounded-2xl">
+                                    <Image
+                                        source={{ uri: item.imageUri }}
+                                        resizeMode="stretch"
+                                        className="w-48 h-44 rounded-3xl"
+                                    />
+                                </View>
+                            </TouchableOpacity>
 
-            <FlatList
-                data={contents}
-                keyExtractor={(item, index) => index.toString()}
-                numColumns={2}
-                columnWrapperStyle={{ justifyContent: "space-evenly" }}
-                renderItem={({ item }) => (
-                    <View>
-                        <TouchableOpacity
-                            className="rounded-2xl"
-                            onPress={() => {
-                                item.name === "Quiz" ? navigation.navigate('Quiz', { material: title, contents })
-                                    : navigation.navigate('Letter', { materialName: title, level: item.position })
-                            }}
-                        >
-                            <View className="rounded-2xl">
-                                <Image
-                                    source={{ uri: item.imageUri }}
-                                    resizeMode="stretch"
-                                    className="w-48 h-44 rounded-3xl"
-                                />
-                            </View>
-                        </TouchableOpacity>
+                            {/* Teks */}
+                            <View className="justify-center items-center w-48 p-2">
+                                <View className="flex-row justify-between">
+                                    <CustomText fontSize={16} focused={true} fontFamily="Poppins-SemiBold">
+                                        {item.name}
+                                    </CustomText>
 
-                        {/* Teks */}
-                        <View className="justify-center items-center w-48 p-2">
-                            <View className="flex-row justify-between">
-                                <CustomText fontSize={16} focused={true} fontFamily="Poppins-SemiBold">
-                                    {item.name}
+                                    {/* Tampilkan ikon hanya jika item.name adalah "Dakuten" atau "Handakuten" */}
+                                    {(item.name === "Ten&Maru" || item.name === "Yōon") && (
+                                        <TouchableOpacity className="ml-1"
+                                            onPress={() => {
+                                                setShowAlert(true);
+                                                setMaterial(item.name);
+                                            }}
+                                        >
+                                            <Icon name="help-outline" color="black" size={15} />
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
+
+                                <CustomText fontSize={13} focused={true} fontFamily="Poppins-Regular" style={{ textAlign: "center" }}>
+                                    {item.description}
                                 </CustomText>
-
-                                {/* Tampilkan ikon hanya jika item.name adalah "Dakuten" atau "Handakuten" */}
-                                {(item.name === "Ten&Maru" || item.name === "Yōon") && (
-                                    <TouchableOpacity className="ml-1"
-                                        onPress={() => {
-                                            setShowAlert(true);
-                                            setMaterial(item.name);
-                                        }}
-                                    >
-                                        <Icon name="help-outline" color="black" size={15} />
-                                    </TouchableOpacity>
-                                )}
                             </View>
-
-                            <CustomText fontSize={13} focused={true} fontFamily="Poppins-Regular" style={{ textAlign: "center" }}>
-                                {item.description}
-                            </CustomText>
                         </View>
-                    </View>
-                )}
-            />
+                    )}
+                />
+            </View>
 
         </SafeAreaView>
     );

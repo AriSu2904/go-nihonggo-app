@@ -4,31 +4,41 @@ import { ApiResponse } from "@/types/ApiResponse";
 import { useMutation } from "@tanstack/react-query";
 
 export interface ProfilePictureResponse {
-    id: string;
-    filename: string;
-    url: string;
-  }
+  id: string;
+  filename: string;
+  url: string;
+}
 
-  export interface StudentResponse {
-    fullName: string;
-    studentId: string;
-    campus: string;
-    major: string;
-    status: string;
-    gender: string;
-    level: string;
-    joinDate: string;
-    profilePicture: ProfilePictureResponse;
-  }
+export interface StudentProgressResponse {
+  highestScore: number;
+  id: string;
+  materialParent: string;
+  quizId: string;
+  quizLevel: number;
+  totalAttempt: number;
+  userId: string;
+}
 
-  export class ImageFile extends Blob{
-    uri: string;
+export interface StudentResponse {
+  fullName: string;
+  studentId: string;
+  campus: string;
+  major: string;
+  status: string;
+  gender: string;
+  level: string;
+  joinDate: string;
+  profilePicture: ProfilePictureResponse;
+}
 
-    constructor(uri: string){
-      super();
-      this.uri = uri;
-    }
+export class ImageFile extends Blob {
+  uri: string;
+
+  constructor(uri: string) {
+    super();
+    this.uri = uri;
   }
+}
 
 export const useStudentProfile = ({
   onSuccess,
@@ -86,8 +96,8 @@ export const useStudentProfilePicture = ({
       } as any);
 
       return api.post<any, ApiResponse<StudentResponse>>(
-        "/students/profile-picture", 
-        formData, 
+        "/students/profile-picture",
+        formData,
         {
           headers: {
             Authorization: `Bearer ${session.token}`,
@@ -112,7 +122,7 @@ export const useStudentProgressTracker = ({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: ApiResponse<any>) => void;
+  onSuccess?: (data: ApiResponse<StudentProgressResponse>) => void;
   onError?: (error: any) => void;
 }) => {
   const { session } = useSession();
@@ -123,15 +133,14 @@ export const useStudentProgressTracker = ({
         throw new Error("No token available");
       }
 
-      try {
-        return api.get<any, ApiResponse<any>>("/quizzes/tracker", {
-          headers: {
-            Authorization: `Bearer ${session.token}`,
-          },
-        });
-      } catch (error) {
-        console.error("Error occured:", error);
-      }
+      return api.get<any, ApiResponse<StudentProgressResponse>>("/quizzes/tracker", {
+        headers: {
+          Authorization: `Bearer ${session.token}`,
+        },
+      }).catch(error => {
+        console.error("Error occurred:", error);
+        throw error;
+      });
     },
     onSuccess: (data) => {
       if (data) {

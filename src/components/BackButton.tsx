@@ -10,8 +10,8 @@ interface BackButtonProps {
 const BackButton: React.FC<BackButtonProps> = ({ onPress, backgroundColor }) => (
     <TouchableOpacity
         onPress={onPress}
-        className="absolute top-7 left-6 p-3 rounded-full z-50"
-        style={{ backgroundColor }}
+        className="absolute rounded-full z-50"
+        style={{ backgroundColor, width: "12%", height: "7%", justifyContent: 'center', alignItems: 'center', left: "4%", top: "8%" }}
     >
         <Icon name="arrow-back" size={24} color="white" />
     </TouchableOpacity>

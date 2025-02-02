@@ -10,6 +10,8 @@ import CustomText from "@/components/TabText"; // Pastikan CustomText tersedia
 import MaterialScreen from "./material";
 import LetterScreen from "./letter";
 import QuizScreen from "./quiz";
+import QuizDetailScreen from "./quizDetail";
+import QuestionScreen from "./question";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,6 +24,8 @@ function SectionHome() {
       <HomeStack.Screen name="Material" component={MaterialScreen} />
       <HomeStack.Screen name="Letter" component={LetterScreen} />
       <HomeStack.Screen name="Quiz" component={QuizScreen} />
+      <HomeStack.Screen name="QuizDetail" component={QuizDetailScreen} />
+      <HomeStack.Screen name="QuestionScreen" component={QuestionScreen} />
     </HomeStack.Navigator>
   )
 }
