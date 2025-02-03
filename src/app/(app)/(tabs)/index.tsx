@@ -1,18 +1,16 @@
 import Card from "@/components/Card";
 import CustomText from "@/components/TabText";
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, ImageBackground, SafeAreaView } from "react-native";
+import { View, Text, FlatList, SafeAreaView } from "react-native";
 import CenterAlert from "@/components/CenterAlert";
 import { useSession } from "@/contexts/auth.context";
 import { StudentProgressResponse, useStudentProgressTracker } from "@/queries/studentsQuery";
 import { MaterialResponse, useListMaterials } from "@/queries/materialsQuery";
-import { setMaterialBg } from "@/utils/reverseUtil";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import MaterialCard from "@/components/MaterialCard";
-import BackButton from "@/components/BackButton";
 import { mockData } from "@/lib/dev/mock-data";
-import styles, { backgroundScreen, fontColors } from "@/utils/globalStyle";
+import styles, { backgroundScreen, COLORS, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 import BackgroundImage from "@/components/BackgroundImage";
 
 const HomeScreen: React.FC = () => {
@@ -20,8 +18,9 @@ const HomeScreen: React.FC = () => {
   const [progress, setProgress] = useState<StudentProgressResponse>();
   const [showAlert, setShowAlert] = useState(false);
   const [alertFor, setAlertFor] = useState<string>("");
-  const { session, signOut } = useSession();
+  const [backgrounds, setBackgrounds] = useState<string[]>([]);
   const navigator = useNavigation<NativeStackNavigationProp<any>>();
+  const { session, signOut } = useSession();
 
   const { mutate: fetchProgress, isPending } = useStudentProgressTracker({
     onSuccess: ({ data }) => {
@@ -37,6 +36,10 @@ const HomeScreen: React.FC = () => {
     onSuccess: ({ data }) => {
       console.log("Data fetched:", data.data);
       setMaterials(data.data);
+
+      // const newBackgrounds = data.data.map(() => RANDOM_LIGHT_COLOR());
+
+      // setBackgrounds(newBackgrounds);
     },
     onError: (error) => {
       console.error("Error fetching data:", error);
@@ -44,16 +47,18 @@ const HomeScreen: React.FC = () => {
   });
 
   useEffect(() => {
-    fetchProgress();
     // fetchMaterials();
-
     const materialMock = mockData.home;
-
     setMaterials(materialMock.data);
+    const unsubscribe = navigator.addListener('focus', () => {
+      fetchProgress();
+    });
+
+    return unsubscribe;
   }, []);
 
   return (
-    <SafeAreaView className={`flex-1 bg-[${backgroundScreen}]`}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: backgroundScreen }}>
       {/* Background Image */}
       <View>
         <BackgroundImage />
@@ -66,8 +71,8 @@ const HomeScreen: React.FC = () => {
               <CenterAlert cancelOnly={true} onCancel={() => setShowAlert(false)} >
                 {alertFor === "KANJI N5" ? (
                   <View>
-                    <CustomText fontSize={16} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
-                      Coooming sooon  ⚒️
+                    <CustomText fontSize={16} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }} >
+                      Coming soon  ⚒️
                     </CustomText>
                     <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-Regular">
                       You still can learn other materials  ✅
@@ -109,17 +114,19 @@ const HomeScreen: React.FC = () => {
             Materials
           </CustomText>
         </View>
-        <ScrollView className="px-5">
-          {materials.map((item) => (
+        <FlatList
+          data={materials}
+          keyExtractor={(item) => item.order.toString()} // Make sure each item has a unique key
+          contentContainerStyle={{ paddingHorizontal: 20 }}
+          renderItem={({ item, index }) => (
             <View className="mt-3 justify-center" key={item.order}>
               <MaterialCard
-                key={item.order}
                 title={item.original}
                 titleSize={30}
                 focused={true}
                 romaji={item.name}
                 children={null}
-                backgroundColor={setMaterialBg(item.name)}
+                backgroundColor={backgrounds[index] || COLORS.greenLime}
                 onPress={() => {
                   if (item.name.toUpperCase() === "KANJI N5") {
                     setShowAlert(true);
@@ -129,12 +136,11 @@ const HomeScreen: React.FC = () => {
                   navigator.navigate('Material', { title: item.name });
                 }}
               />
-            </View>
-          ))}
-        </ScrollView>
+            </View>)}
+        />
       </View>
     </SafeAreaView>
   );
-}
+};
 
 export default HomeScreen;

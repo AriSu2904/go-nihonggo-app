@@ -22,7 +22,7 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
   backgroundColor,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} className={`${backgroundColor} rounded-2xl elevation-lg p-2`}>
+    <TouchableOpacity onPress={onPress} className={`rounded-2xl elevation-lg p-2`} style={{backgroundColor: backgroundColor}}>
         <View className="justify-center px-5">
           <CustomText fontColor={fontColors.black} fontSize={24} fontFamily="Poppins-SemiBold"
           style={{letterSpacing: 8}}

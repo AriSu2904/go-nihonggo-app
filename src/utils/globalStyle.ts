@@ -24,7 +24,7 @@ export const COLORS = {
 }
 
 export const RANDOM_LIGHT_COLOR = (): string => {
-    const colors = ['#AFD393', '#AAC0E5', '#FAC577', '#88B8CF', '#50c9ce', '#88d498', '#f6f5ae', '#f06449'];
+    const colors = ['#AFD393', '#AAC0E5', '#FAC577', '#88B8CF', '#50c9ce', '#88d498', '#f6f5ae'];
 
     const index = Math.floor(Math.random() * colors.length);
     const final = colors[index];

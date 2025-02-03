@@ -11,6 +11,7 @@ import CustomText from "@/components/TabText";
 import styles, { backgroundScreen, COLORS, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 import { hasHistoryInCurrentSection, hasLatestPoint, latestPoint, setSections } from "@/utils/reverseUtil";
 import { height, width } from "@/utils/sizeContext";
+import BackgroundImage from "@/components/BackgroundImage";
 
 const QuizDetailScreen = () => {
     const route = useRoute();
@@ -58,11 +59,20 @@ const QuizDetailScreen = () => {
 
     useEffect(() => {
         fetchQuestions({ materialName: quizDetail.materialParent, id: quizDetail.id });
-        fetchHistory(quizDetail.id);
-    }, []);
+        
+        const unsubscribe = navigation.addListener("focus", () => {
+            fetchHistory(quizDetail.id);
+        }   );
+
+        return unsubscribe;
+    }, [navigation]);
 
     return (
-        <SafeAreaView className={`flex-1 bg-[${backgroundScreen}]`}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: backgroundScreen }}>
+            <View>
+                <BackgroundImage />
+            </View>
+
             <BackButton onPress={() => navigation.goBack()} backgroundColor={backButtonColor} iconColor="black" />
 
             {showAlert && (
@@ -93,7 +103,7 @@ const QuizDetailScreen = () => {
                                         inquiryQuiz({ quizId: quizDetail.id, materialParent: quizDetail.materialParent, level: quizDetail.level, section: item.section });
 
                                         console.log(`Navigating to QuestionScreen with section ${item.section}, level ${quizDetail.level}, material ${quizDetail.materialParent}`);
-                                        navigation.navigate("QuestionScreen", { questions: item.groupedQuestion });
+                                        navigation.navigate("QuestionScreen", { quizId: quizDetail.id ,questions: item.groupedQuestion });
                                     } else {
                                         setShowAlert(true);
                                     }
@@ -110,7 +120,7 @@ const QuizDetailScreen = () => {
                                     elevation: width * 0.02,
                                 }}
                             >
-                                <View style={{ padding: height * 0.02 }}>
+                                <View style={{ padding: height * 0.025 }}>
                                     <View className="flex-row justify-between">
                                         <CustomText fontSize={20} fontColor={fontColors.black} fontFamily="Poppins-SemiBold">
                                             {setSections(item.section, quizDetail.type)?.title}
@@ -122,7 +132,7 @@ const QuizDetailScreen = () => {
                                         )}
                                     </View>
                                     <View className="flex-row justify-between">
-                                        <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-Regular" style={{ padding: height * 0.01 }}>
+                                        <CustomText fontSize={12} fontColor={fontColors.black} fontFamily="Poppins-Regular">
                                             {setSections(item.section, quizDetail.type)?.description}
                                         </CustomText>
                                         {hasLatestPoint(histories, item.section) && (

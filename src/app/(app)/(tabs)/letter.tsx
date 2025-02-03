@@ -91,7 +91,7 @@ const LetterScreen = () => {
     };
 
     return (
-        <SafeAreaView className={`flex-1 bg-[${backgroundScreen}]`}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: backgroundScreen }}>
             <View>
                 <BackgroundImage />
             </View>

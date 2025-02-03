@@ -19,7 +19,7 @@ const CenterAlert: React.FC<CenterAlertProps> = ({ cancelOnly, onCancel, onConfi
           {/* Tombol No */}
           <TouchableOpacity
             onPress={onCancel}
-            className={`flex-1 py-3 rounded-xl ${cancelOnly ? 'bg-red-400' : 'bg-green-400 mr-2'}`}
+            className={`flex-1 py-3 rounded-xl ${cancelOnly ? 'bg-[#f06449]' : 'bg-[#88d498] mr-2'}`}
           >
             <Text className="text-center text-gray-800 font-medium">{cancelOnly ? 'Close' : 'No'}</Text>
           </TouchableOpacity>

@@ -1,5 +1,8 @@
 import BackButton from "@/components/BackButton";
+import BackgroundImage from "@/components/BackgroundImage";
+import CenterAlert from "@/components/CenterAlert";
 import CustomText from "@/components/TabText";
+import { TargetAnswers, useSubmitQuiz } from "@/queries/questionQuery";
 import styles, { backgroundScreen, COLORS, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 import { randomMessageContext } from "@/utils/reverseUtil";
 import { height, width } from "@/utils/sizeContext";
@@ -11,7 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const QuestionScreen = () => {
     const route = useRoute();
-    const { questions } = route.params as any;
+    const { quizId, questions } = route.params as any;
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     //state
@@ -23,8 +26,38 @@ const QuestionScreen = () => {
     const [score, setScore] = useState(0)
     const [showNextButton, setShowNextButton] = useState(false)
     const [showScoreModal, setShowScoreModal] = useState(false)
+    const [showAlert, setShowAlert] = useState(false);
+    const [listAnswers, setListAnswer] = useState<TargetAnswers[]>([]);
+
+    // mutate
+    const { mutate: submitQuiz, isPending } = useSubmitQuiz({
+        onSuccess: ({ data }) => {
+            console.log("Submit Quiz Result:", data);
+        },
+        onError: (error) => {
+            console.error("Error fetching submit quiz:", error.message);
+        },
+    })
+
+    const handleSubmitQuiz = () => {
+        const requestPayload = {
+            quizId,
+            answers: listAnswers,
+            materialParent: questions[0].materialParent,
+            section: questions[0].section,
+            level: questions[0].level
+        }
+
+        submitQuiz(requestPayload)
+    }
 
     const validateAnswer = (selectedAnswer: string) => {
+        const questionId = questions[currentQuestionIndex]['id'];
+        setListAnswer(prev => [
+            ...prev, 
+            { questionId, targetAnswer: selectedAnswer }
+        ]);
+
         let correctAns = questions[currentQuestionIndex]['answer'];
         setSelectedAnswer(selectedAnswer);
         setCorrectAnswer(correctAns);
@@ -33,12 +66,12 @@ const QuestionScreen = () => {
             setScore(score + 1)
         }
         setShowNextButton(true)
+
     }
 
     const handleNext = () => {
         if (currentQuestionIndex == questions.length - 1) {
-            // Last Question
-            // Show Score Modal
+            handleSubmitQuiz();
             setShowScoreModal(true)
         } else {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -67,7 +100,7 @@ const QuestionScreen = () => {
                             onPress={() => validateAnswer(option)}
                             disabled={isOptionsDisabled}
                             style={{
-                                borderWidth: 3,
+                                borderWidth: width * 0.004,
                                 borderColor: option === correctAnswer
                                     ? COLORS.greenLime
                                     : option === currentOptionSelected
@@ -125,7 +158,6 @@ const QuestionScreen = () => {
         );
     };
 
-
     const renderQuestion = () => {
         return (
             <View
@@ -134,17 +166,27 @@ const QuestionScreen = () => {
                     marginTop: height * 0.03,
                 }}>
                 {
-                    questions[currentQuestionIndex]?.questionImg && (
-                        <Image source={{ uri: questions[currentQuestionIndex].questionImg }}
+                    questions[currentQuestionIndex]?.questionImgDetail && (
+                        <Image source={{ uri: questions[currentQuestionIndex].questionImgDetail }}
                             style={{
                                 width: width * 0.6,
                                 height: height * 0.3,
                                 resizeMode: 'cover',
-                                borderRadius: height * 0.05
+                                borderRadius: height * 0.05,
+                                backgroundColor: `${COLORS.bluePastel}`
                             }}
                         />
                     )
                 }
+                <View style={{
+                    height: height * 0.055,
+                    width: width * 0.3,
+                    backgroundColor: `${COLORS.bluePastel}`,
+                    position: 'absolute',
+                    bottom: -height * 0.00035,
+                    }}>
+
+                </View>
             </View>
         );
     }
@@ -161,7 +203,7 @@ const QuestionScreen = () => {
                     width: width * 0.8,
                     height: height * 0.03,
                     borderRadius: height * 0.03,
-                    backgroundColor: `${COLORS.darkBlue}`,
+                    backgroundColor: `${COLORS.oldGrey}`,
                     overflow: 'hidden',
                 }}>
                     <Animated.View style={[{
@@ -179,13 +221,30 @@ const QuestionScreen = () => {
         )
     }
 
-
     return (
-        <SafeAreaView className={`flex-1 bg-[${backgroundScreen}]`}
+        <SafeAreaView style={{ flex: 1, backgroundColor: backgroundScreen }}
         >
+            <View>
+                <BackgroundImage />
+            </View>
+
+            {showAlert && (
+                <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center z-50 bg-black/50">
+                    <CenterAlert cancelOnly={false} onCancel={() => setShowAlert(false)} onConfirm={() => navigation.goBack()}>
+                        <CustomText fontSize={16} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
+                            Are you sure wan't to exit?
+                        </CustomText>
+                        <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-Regular" style={{ textAlign: 'center' }}>
+                        Your progress will not be saved!
+                        </CustomText>
+                    </CenterAlert>
+                </View>
+            )}
 
             {/* Back Button */}
-            <BackButton onPress={() => navigation.goBack()} backgroundColor={backButtonColor} />
+            <BackButton onPress={() => 
+                setShowAlert(true)
+            } backgroundColor={backButtonColor} />
 
             <View style={{ marginTop: (styles.screen.marginTop) + height * 0.035 }}>
                 {/* Progress Bar */}
@@ -228,7 +287,7 @@ const QuestionScreen = () => {
                         justifyContent: 'center'
                     }}>
                         <View style={{
-                            backgroundColor: COLORS.darkGreen,
+                            backgroundColor: COLORS.blueKing,
                             width: '90%',
                             borderRadius: height * 0.03,
                             padding: height * 0.025,
@@ -252,7 +311,7 @@ const QuestionScreen = () => {
                             <TouchableOpacity
                                 onPress={() => navigation.goBack()}
                                 style={{
-                                    backgroundColor: COLORS.gold,
+                                    backgroundColor: COLORS.grey,
                                     padding: height * 0.015, width: '90%', borderRadius: height * 0.03,
                                 }}>
                                 <CustomText fontSize={20} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
