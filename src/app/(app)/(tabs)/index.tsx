@@ -116,7 +116,7 @@ const HomeScreen: React.FC = () => {
         </View>
         <FlatList
           data={materials}
-          keyExtractor={(item) => item.order.toString()} // Make sure each item has a unique key
+          keyExtractor={(item) => item.order.toString()}
           contentContainerStyle={{ paddingHorizontal: 20 }}
           renderItem={({ item, index }) => (
             <View className="mt-3 justify-center" key={item.order}>

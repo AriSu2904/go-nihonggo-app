@@ -132,7 +132,6 @@ export default function MaterialScreen() {
                                         {item.name}
                                     </CustomText>
 
-                                    {/* Tampilkan ikon hanya jika item.name adalah "Dakuten" atau "Handakuten" */}
                                     {(item.name === "Ten&Maru" || item.name === "Yōon") && (
                                         <TouchableOpacity className="ml-1"
                                             onPress={() => {

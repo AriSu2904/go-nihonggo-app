@@ -35,7 +35,7 @@ export default function Home() {
   return (
       <Tab.Navigator
         screenOptions={{
-          headerShown: false, // Menyembunyikan header
+          headerShown: false,
           tabBarStyle: {
             borderTopWidth: 0.2,
             height: 70,

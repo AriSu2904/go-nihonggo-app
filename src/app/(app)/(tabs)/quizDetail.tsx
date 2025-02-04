@@ -114,7 +114,7 @@ const QuizDetailScreen = () => {
                                         ? backgrounds[index] || COLORS.gold
                                         : "#626262",
                                     shadowColor: COLORS.gold,
-                                    shadowOffset: { width: 4, height: 4 }, // Perbaikan ukuran shadow
+                                    shadowOffset: { width: 4, height: 4 },
                                     shadowOpacity: 0.6,
                                     shadowRadius: 5,
                                     elevation: width * 0.02,

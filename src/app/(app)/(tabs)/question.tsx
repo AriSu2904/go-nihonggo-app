@@ -93,8 +93,8 @@ const QuestionScreen = () => {
                 <FlatList
                     data={questions[currentQuestionIndex]?.options || []}
                     keyExtractor={(item) => item}
-                    numColumns={2} // Menampilkan 2 tombol per baris
-                    columnWrapperStyle={{ justifyContent: "space-evenly" }} // Atur agar ada jarak antar kolom
+                    numColumns={2} 
+                    columnWrapperStyle={{ justifyContent: "space-evenly" }}
                     renderItem={({ item: option }) => (
                         <TouchableOpacity
                             onPress={() => validateAnswer(option)}
