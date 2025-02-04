@@ -1,3 +1,4 @@
+import { height, width } from "@/utils/sizeContext";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -12,7 +13,7 @@ const BackButton: React.FC<BackButtonProps> = ({ onPress, backgroundColor, iconC
     <TouchableOpacity
         onPress={onPress}
         className="absolute rounded-full z-50"
-        style={{ backgroundColor, width: "12%", height: "7%", justifyContent: 'center', alignItems: 'center', left: "4%", top: "8%" }}
+        style={{ backgroundColor, width: width * 0.15, height: height * 0.05, justifyContent: 'center', alignItems: 'center', left: "4%", top: "7%" }}
     >
         <Icon name="arrow-back" size={24} color={iconColor} />
     </TouchableOpacity>

@@ -10,6 +10,7 @@ import CustomText from '@/components/TabText';
 import { Audio } from 'expo-av';
 import { backgroundScreen, fontColors, RANDOM_LIGHT_COLOR } from '@/utils/globalStyle';
 import BackgroundImage from '@/components/BackgroundImage';
+import { height } from '@/utils/sizeContext';
 
 
 interface LetterDetailProps {
@@ -36,17 +37,15 @@ const LetterScreen = () => {
     const { materialName, level } = route.params as { materialName: string, level: number };
     const [letters, setLetters] = useState<LetterResponse[]>([]);
     const [showDetail, setShowDetail] = useState(false);
-    const [imageDetail, setImageDetail] = useState<{imageUrl: string, audioUri: string}>();
+    const [imageDetail, setImageDetail] = useState<{ imageUrl: string, audioUri: string }>();
     const [sound, setSound] = useState<any>(null);
     const [backButtonColor] = useState(RANDOM_LIGHT_COLOR());
 
     const playAudio = async () => {
-        if(imageDetail?.imageUrl) {
+        if (imageDetail?.audioUri) {
             const { sound } = await Audio.Sound.createAsync({
                 uri: imageDetail.audioUri,
             });
-
-            setSound(sound);
 
             await sound.playAsync();
         }
@@ -97,7 +96,7 @@ const LetterScreen = () => {
             </View>
 
             {/* Back Button */}
-                <BackButton onPress={() => navigation.goBack()} backgroundColor={backButtonColor} iconColor='#000000' />
+            <BackButton onPress={() => navigation.goBack()} backgroundColor={backButtonColor} iconColor='#000000' />
 
             {/* Alert */}
             {showDetail && imageDetail && (
@@ -105,15 +104,16 @@ const LetterScreen = () => {
                     <LetterDetail imageDetailUri={imageDetail.imageUrl}>
                         <View className='flex-row justify-evenly items-center'>
                             <TouchableOpacity onPress={() => setShowDetail(false)}
-                            className="flex-1 bg-[#f58383] rounded-xl py-2"
-                                style={{ maxWidth: '60%'}}
+                                className="flex-1 bg-[#f58383] rounded-xl"
+                                style={{ maxWidth: '60%', padding: height * 0.007 }}
                             >
-                                <CustomText fontSize={15} fontColor={fontColors.black} fontFamily="Poppins-Medium" style={{ textAlign: 'center' }}>
+                                <CustomText fontSize={20} fontColor={fontColors.black} fontFamily="Poppins-Medium" style={{ textAlign: 'center' }}>
                                     Close
                                 </CustomText>
                             </TouchableOpacity>
-                            <TouchableOpacity className='bg-[#19eea7] rounded-xl p-2'
+                            <TouchableOpacity className='bg-[#19eea7] rounded-xl'
                                 onPress={playAudio}
+                                style={{ padding: height * 0.015 }}
                             >
                                 <Icon name="multitrack-audio" size={24} color="black" />
                             </TouchableOpacity>
@@ -124,27 +124,29 @@ const LetterScreen = () => {
 
             {/* Judul */}
 
-            {/* FlatList dengan pengelompokan manual */}
-            <FlatList
-                data={groupedData()}
-                keyExtractor={(item, index) => `row-${index}`}
-                contentContainerStyle={{ paddingBottom: 80 }}
-                renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingHorizontal: 10, marginTop: 10 }}>
-                        {item.map((letter: LetterResponse, index: React.Key | null | undefined) => (
-                            <RoundedBox
-                                key={index}
-                                imgUri={letter.secondImgUri}
-                                onPress={() => {
-                                    console.log("Pressed:", letter.secondImgUri);
-                                    setShowDetail(true);
-                                    setImageDetail({ imageUrl: letter.secondImgDetailUri, audioUri: letter.audioUri });
-                                }}
-                            />
-                        ))}
-                    </View>
-                )}
-            />
+            {/* Letters */}
+            <View style={{ flex: 1, marginTop: height * 0.125 }}>
+                <FlatList
+                    data={groupedData()}
+                    keyExtractor={(item, index) => `row-${index}`}
+                    contentContainerStyle={{ paddingBottom: height * 0.12 }}
+                    renderItem={({ item }) => (
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingHorizontal: height * 0.025, marginTop: height * 0.02 }}>
+                            {item.map((letter: LetterResponse, index: React.Key | null | undefined) => (
+                                <RoundedBox
+                                    key={index}
+                                    imgUri={letter.secondImgUri}
+                                    onPress={() => {
+                                        console.log("Pressed:", letter.secondImgUri);
+                                        setShowDetail(true);
+                                        setImageDetail({ imageUrl: letter.secondImgDetailUri, audioUri: letter.audioUri });
+                                    }}
+                                />
+                            ))}
+                        </View>
+                    )}
+                />
+            </View>
         </SafeAreaView>
     );
 };

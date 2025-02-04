@@ -32,7 +32,7 @@ export const useListLetters = ({
             }
             console.log("fetching letters for with level %s %s", materialName, level);
 
-            return api.get<any, ApiResponse<LetterResponse[]>>(`/letters/${materialName}?level=${level}`, {
+            return api.get<any, ApiResponse<LetterResponse[]>>(`/letters/type/${materialName}?level=${level}`, {
                 headers: {
                     Authorization: `Bearer ${session.token}`,
                 },

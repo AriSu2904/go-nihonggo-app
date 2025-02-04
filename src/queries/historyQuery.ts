@@ -31,7 +31,7 @@ export const useHistoryUserQuiz = ({
             }
             console.log("fetching history with id %s", id);
 
-            return api.get<any, ApiResponse<HistoryUser[]>>(`/quizzes/history/quiz/${id}`, {
+            return api.get<any, ApiResponse<HistoryUser[]>>(`/quiz/histories/${id}`, {
                 headers: {
                     Authorization: `Bearer ${session.token}`,
                 },

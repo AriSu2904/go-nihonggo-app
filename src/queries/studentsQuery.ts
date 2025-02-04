@@ -55,7 +55,7 @@ export const useStudentProfile = ({
         throw new Error("No token available");
       }
 
-      return api.get<any, ApiResponse<StudentResponse>>("/students/me", {
+      return api.get<any, ApiResponse<StudentResponse>>("/users/me", {
         headers: {
           Authorization: `Bearer ${session.token}`,
         },
@@ -96,7 +96,7 @@ export const useStudentProfilePicture = ({
       } as any);
 
       return api.post<any, ApiResponse<StudentResponse>>(
-        "/students/profile-picture",
+        "/users/profile-pictures",
         formData,
         {
           headers: {
@@ -133,7 +133,7 @@ export const useStudentProgressTracker = ({
         throw new Error("No token available");
       }
 
-      return api.get<any, ApiResponse<StudentProgressResponse>>("/quizzes/tracker", {
+      return api.get<any, ApiResponse<StudentProgressResponse>>("/quiz/trackers", {
         headers: {
           Authorization: `Bearer ${session.token}`,
         },

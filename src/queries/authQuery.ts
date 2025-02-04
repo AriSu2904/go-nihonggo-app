@@ -29,7 +29,7 @@ export const useRegister = ({
 }) => {
   return useMutation({
     mutationFn: async (payload: AuthPayload) => {
-      return api.post<any, ApiResponse<RegisterResponse>>("/auth/register", payload);
+      return api.post<any, ApiResponse<RegisterResponse>>("/register", payload);
     },
     onSuccess: (data) => {
       onSuccess && onSuccess(data);
@@ -49,7 +49,7 @@ export const useLogin = ({
 }) => {
   return useMutation({
     mutationFn: async (payload: AuthPayload) => {
-      return api.post<any, ApiResponse<LoginResponse>>("/auth/login", payload);
+      return api.post<any, ApiResponse<LoginResponse>>("/login", payload);
     },
     onSuccess: (data) => {
       onSuccess && onSuccess(data);

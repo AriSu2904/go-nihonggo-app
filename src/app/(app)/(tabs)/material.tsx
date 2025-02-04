@@ -24,7 +24,7 @@ export default function MaterialScreen() {
 
     const { mutate: fetchContent, isPending } = useMaterialContent({
         onSuccess: ({ data }) => {
-            console.log("Data fetched:", data);
+            console.log("Fetched Material contents: ", data);
             setContents(data.data);
         },
         onError: (error) => {
@@ -33,11 +33,7 @@ export default function MaterialScreen() {
     });
 
     useEffect(() => {
-        // fetchContent(title);
-
-        const materialMock = mockData.material;
-
-        setContents(materialMock(title).data);
+        fetchContent(title);
     }, []);
 
     return (

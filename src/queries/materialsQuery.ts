@@ -55,7 +55,7 @@ export const useMaterialContent = ({
         throw new Error("No token available");
       }
 
-      return api.get<any, ApiResponse<MaterialResponse[]>>(`/contents/${materialName}`, {
+      return api.get<any, ApiResponse<MaterialResponse[]>>(`/materials/contents/${materialName}`, {
         headers: {
           Authorization: `Bearer ${session.token}`,
         },

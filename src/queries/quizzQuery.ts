@@ -54,7 +54,7 @@ export const useQuizList = ({
             }
             console.log("fetching letters for %s", materialName);
 
-            return api.get<any, ApiResponse<QuizResponse[]>>(`/quizzes/detail/${materialName.toLowerCase()}`, {
+            return api.get<any, ApiResponse<QuizResponse[]>>(`/quiz/${materialName.toLowerCase()}`, {
                 headers: {
                     Authorization: `Bearer ${session.token}`,
                 },
@@ -86,7 +86,7 @@ export const useQuestionByQuizId = ({
             }
             console.log("fetching quiz %s with id %s", materialName, id);
 
-            return api.get<any, ApiResponse<QuizAndQuestions>>(`/quizzes/questions/${materialName.toLowerCase()}?id=${id}`, {
+            return api.get<any, ApiResponse<QuizAndQuestions>>(`/quiz/questions/${materialName.toLowerCase()}?id=${id}`, {
                 headers: {
                     Authorization: `Bearer ${session.token}`,
                 },

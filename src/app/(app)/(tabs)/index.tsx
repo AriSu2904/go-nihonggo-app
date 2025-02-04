@@ -12,6 +12,7 @@ import MaterialCard from "@/components/MaterialCard";
 import { mockData } from "@/lib/dev/mock-data";
 import styles, { backgroundScreen, COLORS, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 import BackgroundImage from "@/components/BackgroundImage";
+import BackButton from "@/components/BackButton";
 
 const HomeScreen: React.FC = () => {
   const [materials, setMaterials] = useState<MaterialResponse[]>([]);
@@ -24,7 +25,7 @@ const HomeScreen: React.FC = () => {
 
   const { mutate: fetchProgress, isPending } = useStudentProgressTracker({
     onSuccess: ({ data }) => {
-      console.log("Data fetched:", data);
+      console.log("Fetched Progress User:", data);
       setProgress(data.data);
     },
     onError: (error) => {
@@ -34,12 +35,12 @@ const HomeScreen: React.FC = () => {
 
   const { mutate: fetchMaterials, isPending: loadingFetchMaterial } = useListMaterials({
     onSuccess: ({ data }) => {
-      console.log("Data fetched:", data.data);
+      console.log("Fetched Materials: ", data.data);
       setMaterials(data.data);
 
-      // const newBackgrounds = data.data.map(() => RANDOM_LIGHT_COLOR());
+      const newBackgrounds = data.data.map(() => RANDOM_LIGHT_COLOR());
 
-      // setBackgrounds(newBackgrounds);
+      setBackgrounds(newBackgrounds);
     },
     onError: (error) => {
       console.error("Error fetching data:", error);
@@ -47,9 +48,8 @@ const HomeScreen: React.FC = () => {
   });
 
   useEffect(() => {
-    // fetchMaterials();
-    const materialMock = mockData.home;
-    setMaterials(materialMock.data);
+    fetchMaterials();
+    
     const unsubscribe = navigator.addListener('focus', () => {
       fetchProgress();
     });
@@ -63,7 +63,7 @@ const HomeScreen: React.FC = () => {
       <View>
         <BackgroundImage />
       </View>
-      {/* <BackButton backgroundColor="#333333" onPress={() => signOut()} /> */}
+      <BackButton backgroundColor="#333333" onPress={() => signOut()} />
       <View className="flex-1 p-4">
         {
           (showAlert) && (

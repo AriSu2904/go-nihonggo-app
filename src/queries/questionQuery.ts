@@ -44,7 +44,7 @@ export const useInquiryQuestion = ({
 
             console.log("try to inquiry with data %s", request);
 
-            return api.post<any, ApiResponse<QuizResponse>>('/quizzes/inquiry', request, {
+            return api.post<any, ApiResponse<QuizResponse>>('/quiz/inquiry', request, {
                 headers: {
                     Authorization: `Bearer ${session.token}`,
                 },
@@ -74,9 +74,8 @@ export const useSubmitQuiz = ({
             if (!session?.token) {
                 throw new Error("No token available");
             }
-            console.log("try to submit quiz with data %s", JSON.stringify(payload));
 
-            return api.post<any, ApiResponse<SubmitQuizRequest>>('/quizzes/submit', payload, {
+            return api.post<any, ApiResponse<SubmitQuizRequest>>('/quiz/submit', payload, {
                 headers: {
                     Authorization: `Bearer ${session.token}`,
                 },
@@ -86,10 +85,6 @@ export const useSubmitQuiz = ({
             onSuccess && onSuccess(data);
         },
         onError: (error) => {
-            console.log(error.cause);
-            console.log(error.message);
-            console.log(error.name);
-            console.log("error", error);
             onError && onError(error);
         },
     });
