@@ -7,6 +7,7 @@ import BackButton from "@/components/BackButton";
 import BackgroundImage from "@/components/BackgroundImage";
 import CustomText from "@/components/TabText";
 import styles, { backgroundScreen, COLORS, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
+import { height } from "@/utils/sizeContext";
 
 const QuizScreen = () => {
     const route = useRoute();
@@ -45,7 +46,7 @@ const QuizScreen = () => {
             <BackButton onPress={() => navigation.goBack()} backgroundColor={backButtonColor} />
 
             <View style={styles.screen}>
-                <CustomText fontSize={24} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
+                <CustomText fontSize={24} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center', marginTop: height * 0.015 }}>
                     Test your knowledge on
                 </CustomText>
                 <CustomText fontSize={20} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>

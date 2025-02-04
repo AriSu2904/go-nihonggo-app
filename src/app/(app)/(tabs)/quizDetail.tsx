@@ -68,7 +68,7 @@ const QuizDetailScreen = () => {
     }, [navigation]);
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: backgroundScreen }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: backgroundScreen, zIndex: 5 }}>
             <View>
                 <BackgroundImage />
             </View>
@@ -95,7 +95,7 @@ const QuizDetailScreen = () => {
                 data={quizAndQuestions?.questions}
                 keyExtractor={(item) => item.section}
                 renderItem={({ item, index }) => (
-                    <View className="justify-center items-center" style={{ marginTop: height * 0.02 }}>
+                    <View className="justify-center items-center" style={{ marginTop: height * 0.03, zIndex: 5 }}>
                         <View style={{ width: '90%' }}>
                             <TouchableOpacity
                                 onPress={() => {

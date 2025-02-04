@@ -125,7 +125,7 @@ const LetterScreen = () => {
             {/* Judul */}
 
             {/* Letters */}
-            <View style={{ flex: 1, marginTop: height * 0.125 }}>
+            <View style={{ flex: 1, marginTop: height * 0.125, zIndex: 3 }}>
                 <FlatList
                     data={groupedData()}
                     keyExtractor={(item, index) => `row-${index}`}

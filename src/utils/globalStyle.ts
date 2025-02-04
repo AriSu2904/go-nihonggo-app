@@ -38,6 +38,7 @@ export const backgroundScreen = '#252c4a';
 const styles = StyleSheet.create({
     screen: {
         marginTop: width * 0.23,
+        padding: width * 0.05
     },
     bottom: {
         paddingBottom: height * 0.12,
