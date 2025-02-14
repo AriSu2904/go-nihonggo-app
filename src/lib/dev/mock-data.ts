@@ -137,6 +137,21 @@ export const mockData = {
             ],
             error: null
         }
+    },
+    userProfile: {
+        campus: "Universitas Siber Asia",
+        fullName: "JOHN DOE",
+        gender: "L",
+        joinDate: "2022-10-17T00:00:00Z",
+        level: "Sarjana",
+        major: "PJJ Informatika",
+        profilePicture: {
+            filename: "1739551889827_profile-picture.jpg",
+            id: "a34b30ac-7425-4f26-8056-64d150fd8f3f",
+            url: "example.com"
+        },
+        status: "Non-Aktif-2024/2025 Ganjil",
+        studentId: "220401010000"
     }
 }
 

@@ -29,9 +29,9 @@ export const useHistoryUserQuiz = ({
             if (!session?.token) {
                 throw new Error("No token available");
             }
-            console.log("fetching history with id %s", id);
+            const path = id == "ALL" ? "/quiz/histories" : `/quiz/histories/${id}`;
 
-            return api.get<any, ApiResponse<HistoryUser[]>>(`/quiz/histories/${id}`, {
+            return api.get<any, ApiResponse<HistoryUser[]>>(`${path}`, {
                 headers: {
                     Authorization: `Bearer ${session.token}`,
                 },

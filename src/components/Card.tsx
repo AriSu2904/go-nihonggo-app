@@ -31,8 +31,10 @@ const Card: React.FC<CardProps> = ({
   
   return (
     <View
-    className={`${backgroundColor} rounded-${rounded} elevation-2xl py-3 my-2 justify-center items-center`}>
-      <CustomText fontColor={titleColor} fontSize={titleSize} fontFamily="Poppins-SemiBold" >
+    className={`${backgroundColor} rounded-${rounded} elevation-2xl py-3 my-2`}>
+      <CustomText fontColor={titleColor} fontSize={titleSize} fontFamily="Poppins-SemiBold"
+        style={{ alignSelf: "center"}}
+      >
         {title}
         <TouchableOpacity onPress={onPress}>
         <Icon name="help-outline" size={14} color="#333333" />

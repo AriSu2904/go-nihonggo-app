@@ -294,7 +294,7 @@ const QuestionScreen = () => {
                             alignItems: 'center'
                         }}>
                             <CustomText fontSize={28} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
-                                {`Correct annswer ${score}`}
+                                {`Correct answer ${score}`}
                             </CustomText>
 
                             <View style={{

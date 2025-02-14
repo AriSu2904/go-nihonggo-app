@@ -17,6 +17,9 @@ export interface StudentProgressResponse {
   quizLevel: number;
   totalAttempt: number;
   userId: string;
+  inquiryUsed: boolean;
+  currentScore: number;
+  section: string;
 }
 
 export interface StudentResponse {

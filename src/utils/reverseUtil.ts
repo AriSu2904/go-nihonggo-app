@@ -44,6 +44,19 @@ const description = {
     }
 }
 
+export const getSection = (section: string) => {
+    switch (section) {
+        case sections.FIRST:
+            return reverseSections.ONE;
+        case sections.SECOND:
+            return reverseSections.TWO;
+        case sections.THIRD:
+            return reverseSections.THREE;
+        default:
+            return null;
+    }
+}
+
 export const setSections = (section: string, type: string) => {
     if (type === letterType.LETTER) {
         switch (section) {
@@ -188,3 +201,9 @@ export function randomMessageContext (score: number, totalQuestions: number) {
         return lowScoreMessages[Math.floor(Math.random() * lowScoreMessages.length)];
     }
 };
+
+export const randomIcons = () => {
+    const icons = ["🔥", "🎯", "🚀", "🏆", "🌟", "💪", "📚"];
+    const index = Math.floor(Math.random() * icons.length);
+    return icons[index];
+}

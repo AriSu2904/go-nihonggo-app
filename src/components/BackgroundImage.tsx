@@ -23,7 +23,6 @@ const BackgroundImage: FC<BackgrounImageProps> = ({
           style={{
             width: width * screenWidth,
             height: height * 0.25,
-            zIndex: 2,
             position: 'absolute',
             opacity: opacity,
             top: top,
