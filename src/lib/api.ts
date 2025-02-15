@@ -1,14 +1,7 @@
 import axios from "axios";
-// import createAuthRefreshInterceptor from "axios-auth-refresh";
 
 export const api = axios.create({
-  baseURL: "https://6vw2kgxauc.execute-api.us-east-2.amazonaws.com/api/v1",
+  baseURL: "https://3hebgzton4.execute-api.ap-southeast-2.amazonaws.com/go-nihongo",
+  // baseURL: "http://10.0.2.2:3000/api/v1",
+  // baseURL: "http://10.0.2.2:3002/api/v1",
 });
-
-// const refreshAuthLogic = (failedRequest) =>
-//   api.post("/auth/refresh").then((tokenRefreshResponse) => {
-//     localStorage.setItem("token", tokenRefreshResponse.data.token);
-//     failedRequest.response.config.headers["Authorization"] =
-//       "Bearer " + tokenRefreshResponse.data.token;
-//     return Promise.resolve();
-//   });

@@ -15,6 +15,7 @@ export interface RegisterResponse {
 export interface LoginResponse {
   studentId: string;
   role: string;
+  nickname: string;
   token: string;
   refreshToken: string;
 }
@@ -28,7 +29,7 @@ export const useRegister = ({
 }) => {
   return useMutation({
     mutationFn: async (payload: AuthPayload) => {
-      return api.post<any, ApiResponse<RegisterResponse>>("/auth/register", payload);
+      return api.post<any, ApiResponse<RegisterResponse>>("/register", payload);
     },
     onSuccess: (data) => {
       onSuccess && onSuccess(data);
@@ -48,7 +49,7 @@ export const useLogin = ({
 }) => {
   return useMutation({
     mutationFn: async (payload: AuthPayload) => {
-      return api.post<any, ApiResponse<LoginResponse>>("/auth/login", payload);
+      return api.post<any, ApiResponse<LoginResponse>>("/login", payload);
     },
     onSuccess: (data) => {
       onSuccess && onSuccess(data);
@@ -57,4 +58,14 @@ export const useLogin = ({
       onError && onError(error);
     },
   });
+};
+
+export const refreshAccessToken = async (refreshToken: string) => {
+  const response = await api.post<any, ApiResponse<LoginResponse>>("/auth/refresh", {
+    refreshToken,
+  });
+  if (response) {
+    console.log(response);
+  }
+  throw new Error("Failed to refresh token");
 };

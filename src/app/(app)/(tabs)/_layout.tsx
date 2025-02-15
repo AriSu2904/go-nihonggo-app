@@ -1,50 +1,97 @@
-import { Tabs } from "expo-router";
 import React from "react";
-import { Platform } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { View } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import AskScreen from "./ask";
+import HomeScreen from ".";
+import { createStackNavigator } from '@react-navigation/stack';
+import ProfileScreen from "./profile";
+import CustomText from "@/components/TabText"; // Pastikan CustomText tersedia
+import MaterialScreen from "./material";
+import LetterScreen from "./letter";
+import QuizScreen from "./quiz";
+import QuizDetailScreen from "./quizDetail";
+import QuestionScreen from "./question";
+import { fontColors } from "@/utils/globalStyle";
 
-import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import TabBarBackground from "@/components/ui/TabBarBackground";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+const Tab = createBottomTabNavigator();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+const HomeStack = createStackNavigator();
 
+function SectionHome() {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="HomeMain" component={HomeScreen} />
+      <HomeStack.Screen name="Material" component={MaterialScreen} />
+      <HomeStack.Screen name="Letter" component={LetterScreen} />
+      <HomeStack.Screen name="Quiz" component={QuizScreen} />
+      <HomeStack.Screen name="QuizDetail" component={QuizDetailScreen} />
+      <HomeStack.Screen name="QuestionScreen" component={QuestionScreen} />
+    </HomeStack.Navigator>
+  )
+}
+
+export default function Home() {
+  return (
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: {
+            borderTopWidth: 0.2,
+            height: 70,
             position: "absolute",
-          },
-          default: {},
-        }),
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
-          ),
+            backgroundColor: "white",
+          }
         }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
-        }}
-      />
-    </Tabs>
+      >
+        <Tab.Screen
+          name="Home"
+          component={SectionHome}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Icon name="home-filled" color={focused ? "#333333" : "#999999"} size={32} />
+            ),
+            tabBarLabel: ({ focused }) => (
+              <View style={{ flexDirection: "column", alignItems: "center", marginTop: 8 }}>
+                <CustomText fontColor={fontColors.black} fontSize={13}>
+                  Home
+                </CustomText>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Ask"
+          component={AskScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Icon name={focused ? "messenger" : "messenger-outline"} color={focused ? "#333333" : "#999999"} size={32} />
+            ),
+            tabBarLabel: ({ focused }) => (
+              <View style={{ flexDirection: "column", alignItems: "center", marginTop: 8 }}>
+                <CustomText fontColor={fontColors.black} fontSize={13}>
+                  Ask
+                </CustomText>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Icon name={focused ? "person" : "person-outline"} color={focused ? "#333333" : "#999999"} size={32} />
+            ),
+            tabBarLabel: ({ focused }) => (
+              <View style={{ flexDirection: "column", alignItems: "center", marginTop: 8 }}>
+                <CustomText fontColor={fontColors.black} fontSize={13}>
+                  Profile
+                </CustomText>
+              </View>
+            ),
+          }}
+        />
+      </Tab.Navigator>
   );
 }
