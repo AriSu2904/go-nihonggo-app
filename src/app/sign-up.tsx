@@ -36,17 +36,10 @@ export default function RegisterScreen() {
   });
 
   return (
-    <View className="flex-1 p-4 justify-center">
-      <View className="flex items-center">
-        <Image source={goNihonggoImg} className="size-[120px] rounded-lg" />
-      </View>
+    <View className="flex-1 p-4 justify-center bg-[#FCF7F7]">
+      <Text className="text-2xl font-bold text-center">Hello! Register to get Started</Text>
 
-      <View className="mt-12 flex items-center">
-        <Text className="text-2xl font-semibold">Go Nihonggo APP</Text>
-        <Text className="text-gray-500">Daftar akun baru</Text>
-      </View>
-
-      <View className="mt-8 flex gap-4">
+      <View className="mt-12 flex gap-4">
         <Controller
           control={control}
           name="studentId"
@@ -54,10 +47,14 @@ export default function RegisterScreen() {
             <View className="flex gap-2">
               <TextInput
                 label="NIM"
+                placeholder="Enter your NIM"
                 value={value}
                 onChangeText={onChange}
                 error={!!errors?.studentId?.message}
                 keyboardType="number-pad"
+                style={{
+                  backgroundColor: "#F2E8E8",
+                }}
               />
 
               {errors?.studentId?.message && (
@@ -74,10 +71,14 @@ export default function RegisterScreen() {
             <View className="flex gap-2">
               <TextInput
                 label="Password"
+                placeholder="Enter your password"
                 value={value}
                 onChangeText={onChange}
                 secureTextEntry
                 error={!!errors?.password?.message}
+                style={{
+                  backgroundColor: "#F2E8E8",
+                }}
               />
 
               {errors?.password?.message && (
@@ -88,14 +89,10 @@ export default function RegisterScreen() {
         />
       </View>
 
-      <View className="mt-8 gap-4">
+      <View className="mt-12 gap-4">
         <Button loading={isPending} mode="contained" onPress={handleRegister}>
           Register
         </Button>
-
-        <Link href="/sign-in" asChild>
-          <Button mode="text">Sudah punya akun? Login</Button>
-        </Link>
       </View>
     </View>
   );

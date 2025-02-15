@@ -15,7 +15,8 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { SessionProvider } from "@/contexts/auth.context";
 import { SnackbarProvider } from "@/contexts/snackbar.context";
 import GlobalSnackbar from "@/components/GlobalSnackbar";
-import styles, { backgroundScreen } from "@/utils/globalStyle";
+import { backgroundScreen } from "@/utils/globalStyle";
+import { theme } from "@/constants/theme";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -46,17 +47,17 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-
         <SnackbarProvider>
-          <PaperProvider>
+          <PaperProvider theme={theme}>
             <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
               <Stack>
+                <Stack.Screen name="welcome" options={{ headerShown: false }} />
                 <Stack.Screen name="sign-in" options={{ headerShown: false }} />
                 <Stack.Screen name="sign-up" options={{ headerShown: false }} />
                 <Stack.Screen name="(app)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
-              <StatusBar backgroundColor={backgroundScreen} style="light"/>
+              <StatusBar backgroundColor={backgroundScreen} style="light" />
               <GlobalSnackbar />
             </ThemeProvider>
           </PaperProvider>
