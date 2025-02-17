@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { Link, router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
@@ -9,6 +9,7 @@ import { useRegister } from "@/queries/authQuery";
 import { useSnackbar } from "@/contexts/snackbar.context";
 
 import goNihonggoImg from "@/assets/images/go-nihonggo.webp";
+import { RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 
 export default function RegisterScreen() {
   const snackbar = useSnackbar();
@@ -36,8 +37,10 @@ export default function RegisterScreen() {
   });
 
   return (
-    <View className="flex-1 p-4 justify-center bg-[#FCF7F7]">
-      <Text className="text-2xl font-bold text-center">Hello! Register to get Started</Text>
+    <View className="flex-1 p-4 justify-center bg-background">
+      <Text className="text-2xl font-bold text-center text-white">
+        Hello! Register to get Started
+      </Text>
 
       <View className="mt-12 flex gap-4">
         <Controller
@@ -89,10 +92,21 @@ export default function RegisterScreen() {
         />
       </View>
 
-      <View className="mt-12 gap-4">
-        <Button loading={isPending} mode="contained" onPress={handleRegister}>
-          Register
-        </Button>
+      <View className="mt-12 gap-2">
+        <TouchableOpacity
+          disabled={isPending}
+          onPress={handleRegister}
+          className="p-3 rounded-lg text-center"
+          style={{ backgroundColor: RANDOM_LIGHT_COLOR() }}
+        >
+          <Text className="text-lg text-center font-bold text-black">
+            {isPending ? "Loading..." : "Register"}
+          </Text>
+        </TouchableOpacity>
+
+        <Link href="/sign-in" className="p-3 rounded-lg text-center">
+          <Text className="text-white">Already have an account? Sign In</Text>
+        </Link>
       </View>
     </View>
   );

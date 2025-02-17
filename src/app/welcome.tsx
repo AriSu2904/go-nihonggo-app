@@ -3,13 +3,14 @@ import { Button } from "react-native-paper";
 import { Link } from "expo-router";
 
 import goNihonggoImg from "@/assets/images/go-nihonggo.webp";
+import { RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 
 export default function WelcomeScreen() {
   return (
-    <View className="flex-1 p-4 justify-center bg-[#FCF7F7]">
+    <View className="flex-1 p-4 justify-center bg-background">
       <View className="flex items-center">
-        <Text className="text-lg font-semibold">Welcome to</Text>
-        <Text className="text-2xl font-bold">Go-Nihonggo! APP</Text>
+        <Text className="text-2xl font-bold text-white">Welcome to</Text>
+        <Text className="text-3xl font-bold text-white">Go-Nihonggo! APP</Text>
       </View>
 
       <View className="mt-10 flex items-center">
@@ -17,14 +18,20 @@ export default function WelcomeScreen() {
       </View>
 
       <View className="mt-12 gap-2">
-        <Link href="/sign-in" asChild>
-          <Button mode="contained">Login</Button>
+        <Link
+          href="/sign-in"
+          className="p-3 rounded-lg text-center"
+          style={{ backgroundColor: RANDOM_LIGHT_COLOR() }}
+        >
+          <Text className="text-lg font-bold text-black">Sign In</Text>
         </Link>
 
-        <Link href="/sign-up" asChild>
-          <Button mode="contained" buttonColor="#F2E8E8" textColor="#000">
-            Register
-          </Button>
+        <Link
+          href="/sign-up"
+          className="p-3 rounded-lg text-center"
+          style={{ backgroundColor: RANDOM_LIGHT_COLOR() }}
+        >
+          <Text className="text-lg font-bold text-black">Sign Up</Text>
         </Link>
       </View>
     </View>

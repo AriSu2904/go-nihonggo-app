@@ -11,6 +11,9 @@ module.exports = {
           semibold: ["Poppins-SemiBold"],
         },
       },
+      colors: {
+        background: "#252c4a",
+      },
     },
   },
   plugins: [],

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { Link, router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useLogin } from "@/queries/authQuery";
 import { useSnackbar } from "@/contexts/snackbar.context";
 import { useSession } from "@/contexts/auth.context";
+import { RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 
 export default function LoginScreen() {
   const { signIn } = useSession();
@@ -34,8 +35,10 @@ export default function LoginScreen() {
   });
 
   return (
-    <View className="flex-1 p-4 justify-center bg-[#FCF7F7]">
-      <Text className="text-2xl font-bold text-center">Welcome Back! Glad to see you again!</Text>
+    <View className="flex-1 p-4 justify-center bg-background">
+      <Text className="text-3xl font-bold text-center text-white">
+        Welcome Back! Glad to see you again!
+      </Text>
 
       <View className="mt-12 flex gap-4">
         <Controller
@@ -87,10 +90,21 @@ export default function LoginScreen() {
         />
       </View>
 
-      <View className="mt-12 gap-4">
-        <Button loading={isPending} mode="contained" onPress={handleRegister}>
-          Login
-        </Button>
+      <View className="mt-12 gap-2">
+        <TouchableOpacity
+          disabled={isPending}
+          onPress={handleRegister}
+          className="p-3 rounded-lg text-center"
+          style={{ backgroundColor: RANDOM_LIGHT_COLOR() }}
+        >
+          <Text className="text-lg text-center font-bold text-black">
+            {isPending ? "Loading..." : "Login"}
+          </Text>
+        </TouchableOpacity>
+
+        <Link href="/sign-up" className="p-3 rounded-lg text-center">
+          <Text className="text-white">Don't have an account? Sign Up here</Text>
+        </Link>
       </View>
     </View>
   );
