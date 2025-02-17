@@ -9,9 +9,13 @@ import { MaterialResponse, useListMaterials } from "@/queries/materialsQuery";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import MaterialCard from "@/components/MaterialCard";
-import styles, { backgroundScreen, COLORS, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
+import styles, {
+  backgroundScreen,
+  COLORS,
+  fontColors,
+  RANDOM_LIGHT_COLOR,
+} from "@/utils/globalStyle";
 import BackgroundImage from "@/components/BackgroundImage";
-import BackButton from "@/components/BackButton";
 import { height, width } from "@/utils/sizeContext";
 import { generateQuizName } from "@/utils/materialUtil";
 import { getSection, randomIcons } from "@/utils/reverseUtil";
@@ -23,21 +27,20 @@ const HomeScreen: React.FC = () => {
   const [alertFor, setAlertFor] = useState<string>("");
   const [backgrounds, setBackgrounds] = useState<string[]>([]);
   const navigator = useNavigation<NativeStackNavigationProp<any>>();
-  const { session, signOut } = useSession();
+  const { session } = useSession();
 
-  const { mutate: fetchProgress, isPending: loadStudentProgressTracker } = useStudentProgressTracker({
-    onSuccess: ({ data }) => {
-      console.log("Fetched Progress User:", data);
-      setProgress(data.data);
-    },
-    onError: (error) => {
-      console.error("Error fetching data:", error.message);
-    },
-  });
+  const { mutate: fetchProgress, isPending: loadStudentProgressTracker } =
+    useStudentProgressTracker({
+      onSuccess: ({ data }) => {
+        setProgress(data.data);
+      },
+      onError: (error) => {
+        console.error("Error fetching data:", error.message);
+      },
+    });
 
   const { mutate: fetchMaterials, isPending: loadingFetchMaterial } = useListMaterials({
     onSuccess: ({ data }) => {
-      console.log("Fetched Materials: ", data.data);
       setMaterials(data.data);
 
       const newBackgrounds = data.data.map(() => RANDOM_LIGHT_COLOR());
@@ -53,7 +56,7 @@ const HomeScreen: React.FC = () => {
     fetchMaterials();
     fetchProgress();
 
-    const unsubscribe = navigator.addListener('focus', () => {
+    const unsubscribe = navigator.addListener("focus", () => {
       fetchProgress();
     });
 
@@ -66,29 +69,41 @@ const HomeScreen: React.FC = () => {
       <View>
         <BackgroundImage />
       </View>
-      <BackButton backgroundColor="#333333" onPress={() => signOut()} />
       <View className="flex-1 p-4">
-        {
-          (showAlert) && (
-            <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center z-50 bg-black/50">
-              <CenterAlert cancelOnly={true} onCancel={() => setShowAlert(false)} >
-                {alertFor === "KANJI N5" ? (
-                  <View>
-                    <CustomText fontSize={16} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }} >
-                      Coming soon  ⚒️
-                    </CustomText>
-                    <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-Regular">
-                      You still can learn other materials  ✅
-                    </CustomText>
-                  </View>
-                ) : (
-                  <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
-                    Your activity will be shown below by completing the quiz 📝
+        {showAlert && (
+          <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center z-50 bg-black/50">
+            <CenterAlert cancelOnly={true} onCancel={() => setShowAlert(false)}>
+              {alertFor === "KANJI N5" ? (
+                <View>
+                  <CustomText
+                    fontSize={16}
+                    fontColor={fontColors.black}
+                    fontFamily="Poppins-SemiBold"
+                    style={{ textAlign: "center" }}
+                  >
+                    Coming soon ⚒️
                   </CustomText>
-                )}
-              </CenterAlert>
-            </View>
-          )}
+                  <CustomText
+                    fontSize={14}
+                    fontColor={fontColors.black}
+                    fontFamily="Poppins-Regular"
+                  >
+                    You still can learn other materials ✅
+                  </CustomText>
+                </View>
+              ) : (
+                <CustomText
+                  fontSize={14}
+                  fontColor={fontColors.black}
+                  fontFamily="Poppins-SemiBold"
+                  style={{ textAlign: "center" }}
+                >
+                  Your activity will be shown below by completing the quiz 📝
+                </CustomText>
+              )}
+            </CenterAlert>
+          </View>
+        )}
         <View className="px-3" style={styles.screen}>
           <CustomText fontSize={24} fontFamily="Poppins-SemiBold">
             Welcome, {session?.nickname}!
@@ -97,12 +112,16 @@ const HomeScreen: React.FC = () => {
             Ready to learn today? <Text style={{ fontSize: 22 }}>{randomIcons()}</Text>
           </CustomText>
           <View style={{ marginTop: height * 0.025 }}>
-            <Card focused={true} title="Last activity" borderRadius={2}
+            <Card
+              focused={true}
+              title="Last activity"
+              borderRadius={2}
               onPress={() => {
                 setShowAlert(true);
                 setAlertFor("PROGRESS");
                 return;
-              }}>
+              }}
+            >
               {loadStudentProgressTracker ? (
                 <CustomText fontSize={16} fontFamily="Poppins-SemiBold" fontColor="black">
                   Loading...
@@ -114,16 +133,30 @@ const HomeScreen: React.FC = () => {
                       {progress.inquiryUsed === true ? (
                         <View>
                           <View className="justify-center items-center">
-                            <CustomText fontSize={16} fontFamily="Poppins-SemiBold" fontColor="black">
+                            <CustomText
+                              fontSize={16}
+                              fontFamily="Poppins-SemiBold"
+                              fontColor="black"
+                            >
                               {progress.materialParent}
                             </CustomText>
                           </View>
                           <View className="justify-around flex-row">
                             <CustomText fontSize={14} fontFamily="Poppins-Medium" fontColor="black">
-                              {generateQuizName(progress.quizLevel)} - {getSection(progress.section)}
+                              {generateQuizName(progress.quizLevel)} -{" "}
+                              {getSection(progress.section)}
                             </CustomText>
-                            <CustomText fontSize={14} fontFamily="Poppins-Regular" fontColor="black">
-                              Last score <CustomText fontSize={14} fontFamily="Poppins-SemiBold" fontColor="black">
+                            <CustomText
+                              fontSize={14}
+                              fontFamily="Poppins-Regular"
+                              fontColor="black"
+                            >
+                              Last score{" "}
+                              <CustomText
+                                fontSize={14}
+                                fontFamily="Poppins-SemiBold"
+                                fontColor="black"
+                              >
                                 {progress.currentScore * 10}%
                               </CustomText>
                             </CustomText>
@@ -131,15 +164,35 @@ const HomeScreen: React.FC = () => {
                         </View>
                       ) : (
                         <View className="justify-center items-center">
-                          <CustomText fontSize={width * 0.04} fontFamily="Poppins-Regular" fontColor="black">
-                            Complete your <CustomText fontSize={width * 0.04} fontFamily="Poppins-SemiBold" fontColor="black">
+                          <CustomText
+                            fontSize={width * 0.04}
+                            fontFamily="Poppins-Regular"
+                            fontColor="black"
+                          >
+                            Complete your{" "}
+                            <CustomText
+                              fontSize={width * 0.04}
+                              fontFamily="Poppins-SemiBold"
+                              fontColor="black"
+                            >
                               {generateQuizName(progress.quizLevel)}
-                            </CustomText> quiz
+                            </CustomText>{" "}
+                            quiz
                           </CustomText>
-                          <CustomText fontSize={width * 0.03} fontFamily="Poppins-Regular" fontColor="black">
-                            {getSection(progress.section)} on <CustomText fontSize={width * 0.03} fontFamily="Poppins-SemiBold" fontColor="black">
+                          <CustomText
+                            fontSize={width * 0.03}
+                            fontFamily="Poppins-Regular"
+                            fontColor="black"
+                          >
+                            {getSection(progress.section)} on{" "}
+                            <CustomText
+                              fontSize={width * 0.03}
+                              fontFamily="Poppins-SemiBold"
+                              fontColor="black"
+                            >
                               {progress.materialParent}
-                            </CustomText> to get points! 🚀
+                            </CustomText>{" "}
+                            to get points! 🚀
                           </CustomText>
                         </View>
                       )}
@@ -165,7 +218,10 @@ const HomeScreen: React.FC = () => {
           <FlatList
             data={materials}
             keyExtractor={(item) => item.order.toString()}
-            contentContainerStyle={{ paddingHorizontal: height * 0.02, paddingBottom: height * 0.1 }}
+            contentContainerStyle={{
+              paddingHorizontal: height * 0.009,
+              paddingBottom: height * 0.1,
+            }}
             renderItem={({ item, index }) => (
               <View className="mt-3 justify-center" key={item.order}>
                 <MaterialCard
@@ -181,10 +237,11 @@ const HomeScreen: React.FC = () => {
                       setAlertFor(item.name);
                       return;
                     }
-                    navigator.navigate('Material', { title: item.name });
+                    navigator.navigate("Material", { title: item.name });
                   }}
                 />
-              </View>)}
+              </View>
+            )}
           />
         </View>
       </View>
