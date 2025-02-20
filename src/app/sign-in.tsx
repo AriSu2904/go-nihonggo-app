@@ -9,6 +9,9 @@ import { useLogin } from "@/queries/authQuery";
 import { useSnackbar } from "@/contexts/snackbar.context";
 import { useSession } from "@/contexts/auth.context";
 import { RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
+import { scaleHeight } from "@/utils/sizeContext";
+import Loading from "@/components/Loading";
+import CustomText from "@/components/TabText";
 
 export default function LoginScreen() {
   const { signIn } = useSession();
@@ -95,9 +98,19 @@ export default function LoginScreen() {
           className="p-3 rounded-lg text-center"
           style={{ backgroundColor: RANDOM_LIGHT_COLOR() }}
         >
-          <Text className="text-lg text-center font-bold text-black">
-            {isPending ? "Loading..." : "Login"}
-          </Text>
+          {
+            isPending ? (
+              <View style={{ marginVertical: scaleHeight(14) }}>
+                <Loading size={30} />
+              </View>
+            ) : (
+              <View className="items-center">
+                <CustomText fontSize={16} fontColor="black" fontFamily="Poppins-SemiBold">
+                  Login
+                </CustomText>
+              </View>
+            )
+          }
         </TouchableOpacity>
 
         <Link href="/sign-up" className="p-3 rounded-lg text-center">

@@ -10,6 +10,9 @@ import { useSnackbar } from "@/contexts/snackbar.context";
 
 import goNihonggoImg from "@/assets/images/go-nihonggo.webp";
 import { RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
+import Loading from "@/components/Loading";
+import { scaleHeight } from "@/utils/sizeContext";
+import CustomText from "@/components/TabText";
 
 export default function RegisterScreen() {
   const snackbar = useSnackbar();
@@ -99,9 +102,19 @@ export default function RegisterScreen() {
           className="p-3 rounded-lg text-center"
           style={{ backgroundColor: RANDOM_LIGHT_COLOR() }}
         >
-          <Text className="text-lg text-center font-bold text-black">
-            {isPending ? "Loading..." : "Register"}
-          </Text>
+          {
+            isPending ? (
+              <View style={{ marginVertical: scaleHeight(14) }}>
+                <Loading size={30} />
+              </View>
+            ) : (
+              <View className="items-center">
+                <CustomText fontSize={16} fontColor="black" fontFamily="Poppins-SemiBold">
+                  Register
+                </CustomText>
+              </View>
+            )
+          }
         </TouchableOpacity>
 
         <Link href="/sign-in" className="p-3 rounded-lg text-center">

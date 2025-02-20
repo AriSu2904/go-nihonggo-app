@@ -116,7 +116,7 @@ export default function MaterialScreen() {
                         columnWrapperStyle={{ justifyContent: "space-evenly" }}
                         contentContainerStyle={styles.bottom}
                         renderItem={({ item }) => (
-                            <View>
+                            <View style={{ marginVertical: scaleHeight(17) }}>
                                 <TouchableOpacity
                                     className="rounded-2xl"
                                     onPress={() => {
