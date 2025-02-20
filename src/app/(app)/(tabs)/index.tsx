@@ -16,9 +16,11 @@ import styles, {
   RANDOM_LIGHT_COLOR,
 } from "@/utils/globalStyle";
 import BackgroundImage from "@/components/BackgroundImage";
-import { height, width } from "@/utils/sizeContext";
+import { height, scaleHeight, width } from "@/utils/sizeContext";
 import { generateQuizName } from "@/utils/materialUtil";
 import { getSection, randomIcons } from "@/utils/reverseUtil";
+import Loading from "@/components/Loading";
+import { setToLocalStorage, getFromLocalStorage } from "@/contexts/material.context";
 
 const HomeScreen: React.FC = () => {
   const [materials, setMaterials] = useState<MaterialResponse[]>([]);
@@ -29,39 +31,47 @@ const HomeScreen: React.FC = () => {
   const navigator = useNavigation<NativeStackNavigationProp<any>>();
   const { session } = useSession();
 
-  const { mutate: fetchProgress, isPending: loadStudentProgressTracker } =
-    useStudentProgressTracker({
-      onSuccess: ({ data }) => {
-        setProgress(data.data);
-      },
-      onError: (error) => {
-        console.error("Error fetching data:", error.message);
-      },
-    });
+  const { data, isLoading, error, refetch } = useStudentProgressTracker();
 
   const { mutate: fetchMaterials, isPending: loadingFetchMaterial } = useListMaterials({
     onSuccess: ({ data }) => {
       setMaterials(data.data);
-
+  
       const newBackgrounds = data.data.map(() => RANDOM_LIGHT_COLOR());
-
       setBackgrounds(newBackgrounds);
+  
+      setToLocalStorage<MaterialResponse[]>("materials", data.data);
     },
     onError: (error) => {
       console.error("Error fetching data:", error);
     },
   });
-
+  
   useEffect(() => {
-    fetchMaterials();
-    fetchProgress();
-
-    const unsubscribe = navigator.addListener("focus", () => {
-      fetchProgress();
+    getFromLocalStorage<MaterialResponse[]>("materials").then((data) => {
+      if (data) {
+        console.log("found data from local storage");
+        const newBackgrounds = data.map(() => RANDOM_LIGHT_COLOR());
+        setBackgrounds(newBackgrounds);
+        setMaterials(data);
+      } else {
+        console.log("no data from local storage");
+        fetchMaterials();
+      }
     });
-
-    return unsubscribe;
-  }, []);
+  
+    if (data) {
+      setProgress(data.data.data);
+    }
+  }, [data, fetchMaterials]); // Tambahkan dependencies agar selalu update
+  
+  useEffect(() => {
+    const unsubscribe = navigator.addListener("focus", () => {
+      refetch(); // Gunakan refetch dari useStudentProgressTracker
+    });
+  
+    return () => unsubscribe(); // Cleanup event listener saat unmount
+  }, [refetch]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: backgroundScreen }}>
@@ -111,7 +121,7 @@ const HomeScreen: React.FC = () => {
           <CustomText fontSize={18} fontFamily="Poppins-Regular">
             Ready to learn today? <Text style={{ fontSize: 22 }}>{randomIcons()}</Text>
           </CustomText>
-          <View style={{ marginTop: height * 0.025 }}>
+          <View style={{ marginTop: height * 0.025, minHeight: scaleHeight(50) }}>
             <Card
               focused={true}
               title="Last activity"
@@ -122,10 +132,10 @@ const HomeScreen: React.FC = () => {
                 return;
               }}
             >
-              {loadStudentProgressTracker ? (
-                <CustomText fontSize={16} fontFamily="Poppins-SemiBold" fontColor="black">
-                  Loading...
-                </CustomText>
+              {isLoading ? (
+                <View style={{ marginVertical: height * 0.03 }}>
+                  <Loading size={35} />
+                </View>
               ) : (
                 <View>
                   {progress ? (
@@ -157,7 +167,7 @@ const HomeScreen: React.FC = () => {
                                 fontFamily="Poppins-SemiBold"
                                 fontColor="black"
                               >
-                                {progress.currentScore * 10}%
+                                {(progress.currentScore * 10).toFixed(2)}%
                               </CustomText>
                             </CustomText>
                           </View>
@@ -214,36 +224,45 @@ const HomeScreen: React.FC = () => {
             Materials
           </CustomText>
         </View>
-        <View className="flex-1">
-          <FlatList
-            data={materials}
-            keyExtractor={(item) => item.order.toString()}
-            contentContainerStyle={{
-              paddingHorizontal: height * 0.009,
-              paddingBottom: height * 0.1,
-            }}
-            renderItem={({ item, index }) => (
-              <View className="mt-3 justify-center" key={item.order}>
-                <MaterialCard
-                  title={item.original}
-                  titleSize={30}
-                  focused={true}
-                  romaji={item.name}
-                  children={null}
-                  backgroundColor={backgrounds[index] || COLORS.greenLime}
-                  onPress={() => {
-                    if (item.name.toUpperCase() === "KANJI N5") {
-                      setShowAlert(true);
-                      setAlertFor(item.name);
-                      return;
-                    }
-                    navigator.navigate("Material", { title: item.name });
-                  }}
-                />
-              </View>
-            )}
-          />
-        </View>
+        {loadingFetchMaterial ? (
+          <View style={{ marginVertical: height * 0.5 }}>
+            <Loading size={170} />
+          </View>
+        ) : (
+          <View className="flex-1">
+            <FlatList
+              data={materials}
+              keyExtractor={(item) => item.order.toString()}
+              contentContainerStyle={{
+                paddingHorizontal: height * 0.009,
+                paddingBottom: height * 0.1,
+              }}
+              renderItem={({ item, index }) => (
+                <View className="mt-3 justify-center" key={item.order}>
+                  <MaterialCard
+                    title={item.original}
+                    titleSize={30}
+                    focused={true}
+                    romaji={item.name}
+                    children={null}
+                    backgroundColor={backgrounds[index] || COLORS.greenLime}
+                    onPress={() => {
+                      if (item.name.toUpperCase() === "KANJI N5") {
+                        setShowAlert(true);
+                        setAlertFor(item.name);
+                        return;
+                      }
+                      console.log("Navigating to material", item.name);
+
+                      navigator.navigate("Material", { title: item.name });
+                    }}
+                  />
+                </View>
+              )}
+            />
+          </View>
+        )
+        }
       </View>
     </SafeAreaView>
   );

@@ -31,6 +31,8 @@ export const useListLetters = ({
         throw new Error("No token available");
       }
 
+      console.log('[Letters] Fetching letters for material:', materialName, 'level:', level);
+
       return api.get<any, ApiResponse<LetterResponse[]>>(
         `/letters/type/${materialName}?level=${level}`,
         {

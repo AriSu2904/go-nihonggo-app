@@ -10,7 +10,9 @@ import CustomText from "@/components/TabText";
 import { Audio } from "expo-av";
 import { backgroundScreen, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 import BackgroundImage from "@/components/BackgroundImage";
-import { height } from "@/utils/sizeContext";
+import { height, scaleHeight, scaleWidth } from "@/utils/sizeContext";
+import Loading from "@/components/Loading";
+import { setToLocalStorage, getFromLocalStorage } from "@/contexts/material.context";
 
 interface LetterDetailProps {
   children: React.ReactNode;
@@ -20,7 +22,9 @@ interface LetterDetailProps {
 const LetterDetail: React.FC<LetterDetailProps> = ({ children, imageDetailUri }) => {
   return (
     <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center z-50 bg-black/50">
-      <View className="bg-white w-9/12 h-3/6 rounded-2xl p-4">
+      <View className="bg-white rounded-2xl p-4"
+        style={{ width: scaleWidth(300), height: scaleHeight(350) }}
+      >
         <View className="flex-1 items-center justify-center">
           <Image
             source={{ uri: imageDetailUri }}
@@ -37,11 +41,10 @@ const LetterScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { materialName, level } = route.params as { materialName: string; level: number };
-  const [letters, setLetters] = useState<LetterResponse[]>([]);
   const [showDetail, setShowDetail] = useState(false);
   const [imageDetail, setImageDetail] = useState<{ imageUrl: string; audioUri: string }>();
-  const [sound, setSound] = useState<any>(null);
   const [backButtonColor] = useState(RANDOM_LIGHT_COLOR());
+  const [letters, setLetters] = useState<LetterResponse[]>();
 
   const playAudio = async () => {
     if (imageDetail?.audioUri) {
@@ -53,9 +56,10 @@ const LetterScreen = () => {
     }
   };
 
-  const { mutate: fetchLetters } = useListLetters({
+  const { mutate: fetchLetters, isPending } = useListLetters({
     onSuccess: ({ data }) => {
       setLetters(data.data);
+      setToLocalStorage<LetterResponse[]>(`letters-${materialName}-${level}`, data.data);
     },
     onError: (error) => {
       console.error("Error fetching data:", error.message);
@@ -63,7 +67,16 @@ const LetterScreen = () => {
   });
 
   useEffect(() => {
-    fetchLetters({ materialName, level });
+    getFromLocalStorage<LetterResponse[]>(`letters-${materialName}-${level}`)
+      .then((data) => {
+        if (data) {
+          console.log("Letters found in local storage");
+          setLetters(data);          
+        }else {
+          console.log("Letters not found in local storage");
+          fetchLetters({ materialName, level });
+        }
+      });
   }, []);
 
   const groupedData = () => {
@@ -71,7 +84,7 @@ const LetterScreen = () => {
     let tempRow: any = [];
     let currentColumns = 5;
 
-    letters.forEach((item, index) => {
+    letters?.forEach((item, index) => {
       const numColumns = item.order >= 40 ? 3 : 5;
 
       if (tempRow.length === currentColumns || numColumns !== currentColumns) {
@@ -138,36 +151,42 @@ const LetterScreen = () => {
 
       {/* Letters */}
       <View style={{ flex: 1, marginTop: height * 0.125, zIndex: 3 }}>
-        <FlatList
-          data={groupedData()}
-          keyExtractor={(item, index) => `row-${index}`}
-          contentContainerStyle={{ paddingBottom: height * 0.12 }}
-          renderItem={({ item }) => (
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-                paddingHorizontal: height * 0.025,
-                marginTop: height * 0.02,
-              }}
-            >
-              {item.map((letter: LetterResponse, index: React.Key | null | undefined) => (
-                <RoundedBox
-                  key={index}
-                  imgUri={letter.secondImgUri}
-                  onPress={() => {
-                    console.log("Pressed:", letter.secondImgUri);
-                    setShowDetail(true);
-                    setImageDetail({
-                      imageUrl: letter.secondImgDetailUri,
-                      audioUri: letter.audioUri,
-                    });
-                  }}
-                />
-              ))}
-            </View>
-          )}
-        />
+        {isPending ? (
+          <View style={{ marginVertical: scaleHeight(200) }}>
+            <Loading size={80} />
+          </View>
+        ) : (
+          <FlatList
+            data={groupedData()}
+            keyExtractor={(item, index) => `row-${index}`}
+            contentContainerStyle={{ paddingBottom: height * 0.12 }}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  paddingHorizontal: height * 0.025,
+                  marginTop: height * 0.02,
+                }}
+              >
+                {item.map((letter: LetterResponse, index: React.Key | null | undefined) => (
+                  <RoundedBox
+                    key={index}
+                    imgUri={letter.secondImgUri}
+                    onPress={() => {
+                      console.log("Pressed:", letter.secondImgUri);
+                      setShowDetail(true);
+                      setImageDetail({
+                        imageUrl: letter.secondImgDetailUri,
+                        audioUri: letter.audioUri,
+                      });
+                    }}
+                  />
+                ))}
+              </View>
+            )}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

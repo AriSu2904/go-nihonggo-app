@@ -21,8 +21,6 @@ export default function LoginScreen() {
   const { mutate, isPending } = useLogin({
     onSuccess: ({ data }) => {
       signIn(data.data);
-      snackbar.showSnackbar("Login berhasil!");
-
       router.replace("/");
     },
     onError: (error) => {

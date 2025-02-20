@@ -10,8 +10,9 @@ import CenterAlert from "@/components/CenterAlert";
 import CustomText from "@/components/TabText";
 import styles, { backgroundScreen, COLORS, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 import { hasHistoryInCurrentSection, hasLatestPoint, latestPoint, setSections } from "@/utils/reverseUtil";
-import { height, width } from "@/utils/sizeContext";
+import { height, scaleHeight, width } from "@/utils/sizeContext";
 import BackgroundImage from "@/components/BackgroundImage";
+import Loading from "@/components/Loading";
 
 const QuizDetailScreen = () => {
     const route = useRoute();
@@ -24,12 +25,11 @@ const QuizDetailScreen = () => {
     const [backgrounds, setBackgrounds] = useState<string[]>([]);
     const [backButtonColor] = useState(RANDOM_LIGHT_COLOR());
 
-    const { mutate: fetchQuestions, isPending } = useQuestionByQuizId({
+    const { mutate: fetchQuestions, isPending: loadingQuestion } = useQuestionByQuizId({
         onSuccess: ({ data }) => {
             console.log("Data Questions:", data);
             setQuizAndQuestions(data.data);
 
-            // Generate warna unik untuk setiap question
             const newBackgrounds = data.data.questions.map(() => RANDOM_LIGHT_COLOR());
             setBackgrounds(newBackgrounds);
         },
@@ -59,10 +59,10 @@ const QuizDetailScreen = () => {
 
     useEffect(() => {
         fetchQuestions({ materialName: quizDetail.materialParent, id: quizDetail.id });
-        
+
         const unsubscribe = navigation.addListener("focus", () => {
             fetchHistory(quizDetail.id);
-        }   );
+        });
 
         return unsubscribe;
     }, [navigation]);
@@ -79,7 +79,7 @@ const QuizDetailScreen = () => {
                 <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center z-50 bg-black/50">
                     <CenterAlert cancelOnly={true} onCancel={() => setShowAlert(false)} >
                         <CustomText fontSize={16} fontColor={fontColors.black} fontFamily="Poppins-SemiBold" style={{ textAlign: 'center' }}>
-                            Before starting this section, you need to finish the previous section!
+                            Before starting this quiz, you need to finish section above first!
                         </CustomText>
                     </CenterAlert>
                 </View>
@@ -90,63 +90,68 @@ const QuizDetailScreen = () => {
                     {quizDetail.type === "Dakuten(゛) & Handakuten(゜)" ? "Ten(゛) & Maru(゜)" : quizDetail.type}
                 </CustomText>
             </View>
+            {loadingQuestion ? (
+                <View style={{ marginVertical: scaleHeight(200) }}>
+                    <Loading size={80} />
+                </View>
+            ) : (
+                <FlatList
+                    data={quizAndQuestions?.questions}
+                    keyExtractor={(item) => item.section}
+                    renderItem={({ item, index }) => (
+                        <View className="justify-center items-center" style={{ marginTop: height * 0.03, zIndex: 5 }}>
+                            <View style={{ width: '90%' }}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        if (hasHistoryInCurrentSection(histories, item.section)) {
+                                            inquiryQuiz({ quizId: quizDetail.id, materialParent: quizDetail.materialParent, level: quizDetail.level, section: item.section });
 
-            <FlatList
-                data={quizAndQuestions?.questions}
-                keyExtractor={(item) => item.section}
-                renderItem={({ item, index }) => (
-                    <View className="justify-center items-center" style={{ marginTop: height * 0.03, zIndex: 5 }}>
-                        <View style={{ width: '90%' }}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    if (hasHistoryInCurrentSection(histories, item.section)) {
-                                        inquiryQuiz({ quizId: quizDetail.id, materialParent: quizDetail.materialParent, level: quizDetail.level, section: item.section });
-
-                                        console.log(`Navigating to QuestionScreen with section ${item.section}, level ${quizDetail.level}, material ${quizDetail.materialParent}`);
-                                        navigation.navigate("QuestionScreen", { quizId: quizDetail.id ,questions: item.groupedQuestion });
-                                    } else {
-                                        setShowAlert(true);
-                                    }
-                                }}
-                                className="rounded-xl"
-                                style={{
-                                    backgroundColor: hasHistoryInCurrentSection(histories, item.section)
-                                        ? backgrounds[index] || COLORS.gold
-                                        : "#626262",
-                                    shadowColor: COLORS.gold,
-                                    shadowOffset: { width: 4, height: 4 },
-                                    shadowOpacity: 0.6,
-                                    shadowRadius: 5,
-                                    elevation: width * 0.02,
-                                }}
-                            >
-                                <View style={{ padding: height * 0.025 }}>
-                                    <View className="flex-row justify-between">
-                                        <CustomText fontSize={20} fontColor={fontColors.black} fontFamily="Poppins-SemiBold">
-                                            {setSections(item.section, quizDetail.type)?.title}
-                                        </CustomText>
-                                        {hasLatestPoint(histories, item.section) && (
-                                            <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-Regular">
-                                                Latest points
+                                            console.log(`Navigating to QuestionScreen with section ${item.section}, level ${quizDetail.level}, material ${quizDetail.materialParent}`);
+                                            navigation.navigate("QuestionScreen", { quizId: quizDetail.id, questions: item.groupedQuestion });
+                                        } else {
+                                            setShowAlert(true);
+                                        }
+                                    }}
+                                    className="rounded-xl"
+                                    style={{
+                                        backgroundColor: hasHistoryInCurrentSection(histories, item.section)
+                                            ? backgrounds[index] || COLORS.gold
+                                            : "#626262",
+                                        shadowColor: COLORS.gold,
+                                        shadowOffset: { width: 4, height: 4 },
+                                        shadowOpacity: 0.6,
+                                        shadowRadius: 5,
+                                        elevation: width * 0.02,
+                                    }}
+                                >
+                                    <View style={{ padding: height * 0.025 }}>
+                                        <View className="flex-row justify-between">
+                                            <CustomText fontSize={20} fontColor={fontColors.black} fontFamily="Poppins-SemiBold">
+                                                {setSections(item.section, quizDetail.type)?.title}
                                             </CustomText>
-                                        )}
-                                    </View>
-                                    <View className="flex-row justify-between">
-                                        <CustomText fontSize={12} fontColor={fontColors.black} fontFamily="Poppins-Regular">
-                                            {setSections(item.section, quizDetail.type)?.description}
-                                        </CustomText>
-                                        {hasLatestPoint(histories, item.section) && (
-                                            <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-SemiBold">
-                                                {latestPoint(histories, item.section)}
+                                            {hasLatestPoint(histories, item.section) && (
+                                                <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-Regular">
+                                                    Latest points
+                                                </CustomText>
+                                            )}
+                                        </View>
+                                        <View className="flex-row justify-between">
+                                            <CustomText fontSize={12} fontColor={fontColors.black} fontFamily="Poppins-Regular">
+                                                {setSections(item.section, quizDetail.type)?.description}
                                             </CustomText>
-                                        )}
+                                            {hasLatestPoint(histories, item.section) && (
+                                                <CustomText fontSize={14} fontColor={fontColors.black} fontFamily="Poppins-SemiBold">
+                                                    {latestPoint(histories, item.section)}
+                                                </CustomText>
+                                            )}
+                                        </View>
                                     </View>
-                                </View>
-                            </TouchableOpacity>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
-                )}
-            />
+                    )}
+                />
+            )}
         </SafeAreaView>
     );
 };

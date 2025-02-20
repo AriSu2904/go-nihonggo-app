@@ -1,11 +1,13 @@
 import BackButton from "@/components/BackButton";
 import BackgroundImage from "@/components/BackgroundImage";
 import CenterAlert from "@/components/CenterAlert";
+import Loading from "@/components/Loading";
 import CustomText from "@/components/TabText";
 import { mockData } from "@/lib/dev/mock-data";
 import { useMaterialContent } from "@/queries/materialsQuery";
 import styles, { backgroundScreen, COLORS, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 import style from "@/utils/globalStyle";
+import { height, scaleHeight } from "@/utils/sizeContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { SafeAreaView, View, FlatList, TouchableOpacity, Image, Text, ScrollView } from "react-native";
@@ -17,7 +19,6 @@ export default function MaterialScreen() {
     const { title } = route.params as { title: string };
     const [contents, setContents] = useState<any[]>([]);
     const [showAlert, setShowAlert] = useState(false);
-    const [materialForQuiz, setMaterialForQuiz] = useState<any[]>([]);
     const [material, setMaterial] = useState<string>("");
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [backButtonColor] = useState(RANDOM_LIGHT_COLOR());
@@ -39,7 +40,7 @@ export default function MaterialScreen() {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: backgroundScreen }}>
             <View>
-                <BackgroundImage/>
+                <BackgroundImage />
             </View>
 
             { /* back button */}
@@ -68,8 +69,10 @@ export default function MaterialScreen() {
                                                 className="w-40 h-36 rounded-3xl my-2" />
                                         </View>
                                     ) : (
-                                        <View>
-                                            <Text>Katakana</Text>
+                                        <View className="flex-row justify-center items-center">
+                                            <Image source={require("../../../assets/images/kata-dakuten.png")}
+                                                resizeMode="stretch"
+                                                className="w-52 h-36 rounded-3xl my-2" />
                                         </View>
                                     )
                                 ) : (
@@ -101,56 +104,64 @@ export default function MaterialScreen() {
                 </CustomText>
             </View>
             <View className="flex-1">
-                <FlatList
-                    data={contents}
-                    keyExtractor={(item, index) => index.toString()}
-                    numColumns={2}
-                    columnWrapperStyle={{ justifyContent: "space-evenly" }}
-                    contentContainerStyle={styles.bottom}
-                    renderItem={({ item }) => (
-                        <View>
-                            <TouchableOpacity
-                                className="rounded-2xl"
-                                onPress={() => {
-                                    item.name === "Quiz" ? navigation.navigate('Quiz', { material: title, contents })
-                                        : navigation.navigate('Letter', { materialName: title, level: item.position })
-                                }}
-                            >
-                                <View className="rounded-2xl">
-                                    <Image
-                                        source={{ uri: item.imageUri }}
-                                        resizeMode="stretch"
-                                        className="w-48 h-44 rounded-3xl"
-                                    />
-                                </View>
-                            </TouchableOpacity>
+                {isPending ? (
+                    <View style={{ marginVertical: scaleHeight(200) }}>
+                        <Loading size={80} />
+                    </View>
+                ) : (
+                    <FlatList
+                        data={contents}
+                        keyExtractor={(item, index) => index.toString()}
+                        numColumns={2}
+                        columnWrapperStyle={{ justifyContent: "space-evenly" }}
+                        contentContainerStyle={styles.bottom}
+                        renderItem={({ item }) => (
+                            <View>
+                                <TouchableOpacity
+                                    className="rounded-2xl"
+                                    onPress={() => {
+                                        console.log("Navigating to ", item.name);
 
-                            {/* Teks */}
-                            <View className="justify-center items-center w-48 p-2">
-                                <View className="flex-row justify-between">
-                                    <CustomText fontSize={16} fontFamily="Poppins-SemiBold">
-                                        {item.name}
+                                        item.name === "Quiz" ? navigation.navigate('Quiz', { material: title, contents })
+                                            : navigation.navigate('Letter', { materialName: title, level: item.position })
+                                    }}
+                                >
+                                    <View className="rounded-2xl">
+                                        <Image
+                                            source={{ uri: item.imageUri }}
+                                            resizeMode="stretch"
+                                            className="w-48 h-44 rounded-3xl"
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+
+                                {/* Teks */}
+                                <View className="justify-center items-center w-48 p-2">
+                                    <View className="flex-row justify-between">
+                                        <CustomText fontSize={16} fontFamily="Poppins-SemiBold">
+                                            {item.name}
+                                        </CustomText>
+
+                                        {(item.name === "Ten&Maru" || item.name === "Yōon") && (
+                                            <TouchableOpacity className="ml-1"
+                                                onPress={() => {
+                                                    setShowAlert(true);
+                                                    setMaterial(item.name);
+                                                }}
+                                            >
+                                                <Icon name="help-outline" color="white" size={15} />
+                                            </TouchableOpacity>
+                                        )}
+                                    </View>
+
+                                    <CustomText fontSize={13} fontFamily="Poppins-Regular" style={{ textAlign: "center" }}>
+                                        {item.description}
                                     </CustomText>
-
-                                    {(item.name === "Ten&Maru" || item.name === "Yōon") && (
-                                        <TouchableOpacity className="ml-1"
-                                            onPress={() => {
-                                                setShowAlert(true);
-                                                setMaterial(item.name);
-                                            }}
-                                        >
-                                            <Icon name="help-outline" color="white" size={15} />
-                                        </TouchableOpacity>
-                                    )}
                                 </View>
-
-                                <CustomText fontSize={13} fontFamily="Poppins-Regular" style={{ textAlign: "center" }}>
-                                    {item.description}
-                                </CustomText>
                             </View>
-                        </View>
-                    )}
-                />
+                        )}
+                    />
+                )}
             </View>
 
         </SafeAreaView>

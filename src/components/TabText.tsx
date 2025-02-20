@@ -1,4 +1,4 @@
-import { height } from "@/utils/sizeContext";
+import { height, scaleFont } from "@/utils/sizeContext";
 import React from "react";
 import { Text } from "react-native";
 
@@ -17,7 +17,7 @@ const CustomText: React.FC<TextProps> = ({ children, fontFamily, fontSize, fontC
       style={[
         {
           fontFamily: fontFamily || "Poppins-Medium",
-          fontSize: height * (fontSize / 700), 
+          fontSize: scaleFont(fontSize), 
           color: fontColor || "#ffffff",
         },
         style,

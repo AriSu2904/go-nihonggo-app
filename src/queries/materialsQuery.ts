@@ -25,6 +25,8 @@ export const useListMaterials = ({
         throw new Error("No token available");
       }
 
+      console.log('[Materials] Fetching materials');
+
       return api.get<any, ApiResponse<MaterialResponse[]>>("/materials", {
         headers: {
           Authorization: `Bearer ${session.token}`,

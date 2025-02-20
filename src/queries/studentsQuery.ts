@@ -1,7 +1,7 @@
 import { useSession } from "@/contexts/auth.context";
 import { api } from "@/lib/api";
 import { ApiResponse } from "@/types/ApiResponse";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export interface ProfilePictureResponse {
   id: string;
@@ -121,37 +121,33 @@ export const useStudentProfilePicture = ({
   });
 };
 
-export const useStudentProgressTracker = ({
-  onSuccess,
-  onError,
-}: {
-  onSuccess?: (data: ApiResponse<StudentProgressResponse>) => void;
-  onError?: (error: any) => void;
-}) => {
+const CACHE_TIME = 1000 * 60 * 3; // 3 menit dalam milidetik
+
+export const useStudentProgressTracker = () => {
   const { session } = useSession();
 
-  return useMutation({
-    mutationFn: async () => {
+  return useQuery<ApiResponse<StudentProgressResponse>>({
+    queryKey: ["studentProgress"],
+    queryFn: async () => {
       if (!session?.token) {
         throw new Error("No token available");
       }
 
-      return api.get<any, ApiResponse<StudentProgressResponse>>("/quiz/trackers", {
-        headers: {
-          Authorization: `Bearer ${session.token}`,
-        },
-      }).catch(error => {
-        console.error("Error occurred:", error);
-        throw error;
-      });
+      console.log("[Student Progress Tracker] Fetching student progress tracker");
+
+      return api
+        .get<any, ApiResponse<StudentProgressResponse>>("/quiz/trackers", {
+          headers: {
+            Authorization: `Bearer ${session.token}`,
+          },
+        })
+        .catch((error) => {
+          console.error("Error occurred:", error);
+          throw error;
+        });
     },
-    onSuccess: (data) => {
-      if (data) {
-        onSuccess && onSuccess(data);
-      }
-    },
-    onError: (error) => {
-      onError && onError(error);
-    },
+    staleTime: CACHE_TIME,
+    gcTime: CACHE_TIME,
+    enabled: !!session?.token,
   });
 };

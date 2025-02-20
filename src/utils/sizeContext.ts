@@ -1,4 +1,17 @@
-import { Dimensions } from "react-native";
+import { Dimensions, PixelRatio } from "react-native";
 
-export const width = Dimensions.get('window').width;
-export const height = Dimensions.get('window').height;
+const { width, height } = Dimensions.get("window");
+
+const guidelineBaseWidth = 375; 
+const guidelineBaseHeight = 812;
+
+const scaleWidth = (size: number) => (width / guidelineBaseWidth) * size;
+
+const scaleHeight = (size: number) => (height / guidelineBaseHeight) * size;
+
+const scaleFont = (size: number) => {
+  const scaleFactor = Math.min(width / guidelineBaseWidth, height / guidelineBaseHeight);
+  return Math.round(PixelRatio.roundToNearestPixel(size * scaleFactor));
+};
+
+export { width, height, scaleWidth, scaleHeight, scaleFont };

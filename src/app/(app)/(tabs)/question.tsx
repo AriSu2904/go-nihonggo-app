@@ -5,7 +5,7 @@ import CustomText from "@/components/TabText";
 import { TargetAnswers, useSubmitQuiz } from "@/queries/questionQuery";
 import styles, { backgroundScreen, COLORS, fontColors, RANDOM_LIGHT_COLOR } from "@/utils/globalStyle";
 import { randomMessageContext } from "@/utils/reverseUtil";
-import { height, width } from "@/utils/sizeContext";
+import { height, scaleHeight, scaleWidth, width } from "@/utils/sizeContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import { Animated, SafeAreaView, TouchableOpacity, View, Text, Image, FlatList, Modal } from "react-native"
@@ -105,20 +105,20 @@ const QuestionScreen = () => {
                                     ? COLORS.greenLime
                                     : option === currentOptionSelected
                                         ? COLORS.orange
-                                        : COLORS.grey + "40",
+                                        : COLORS.grey + "80",
                                 backgroundColor: option === correctAnswer
-                                    ? COLORS.greenLime + "20"
+                                    ? COLORS.greenLime + "50"
                                     : option === currentOptionSelected
-                                        ? COLORS.orange + "20"
+                                        ? COLORS.orange + "50"
                                         : COLORS.grey + "20",
-                                height: 60,
+                                height: scaleHeight(60),
                                 borderRadius: 20,
                                 flexDirection: "row",
                                 alignItems: "center",
                                 justifyContent: "space-between",
-                                paddingHorizontal: 20,
-                                marginVertical: 10,
-                                width: width * 0.3,
+                                paddingHorizontal: scaleWidth(20),
+                                marginVertical: scaleHeight(15),
+                                width: scaleWidth(100),
                             }}
                         >
                             <Text style={{ fontSize: 20, color: COLORS.lightYellow }}>{option}</Text>
@@ -127,8 +127,8 @@ const QuestionScreen = () => {
                             {option === correctAnswer ? (
                                 <View
                                     style={{
-                                        width: width * 0.07,
-                                        height: height * 0.04,
+                                        width: scaleWidth(30),
+                                        height: scaleHeight(30),
                                         borderRadius: 15,
                                         backgroundColor: COLORS.greenLime,
                                         justifyContent: "center",
@@ -140,9 +140,9 @@ const QuestionScreen = () => {
                             ) : option === currentOptionSelected ? (
                                 <View
                                     style={{
-                                        width: width * 0.07,
-                                        height: height * 0.04,
-                                        borderRadius: 15,
+                                        width: scaleWidth(30),
+                                        height: scaleHeight(30),
+                                        borderRadius: scaleHeight(15),
                                         backgroundColor: COLORS.orange,
                                         justifyContent: "center",
                                         alignItems: "center",
@@ -246,7 +246,7 @@ const QuestionScreen = () => {
                 setShowAlert(true)
             } backgroundColor={backButtonColor} />
 
-            <View style={{ marginTop: (styles.screen.marginTop) + height * 0.035 }}>
+            <View style={{ marginTop: scaleHeight(110), padding: scaleHeight(10) }}>
                 {/* Progress Bar */}
                 {renderProgressBar()}
 
@@ -261,7 +261,7 @@ const QuestionScreen = () => {
                     <TouchableOpacity
                         onPress={handleNext}
                         style={{
-                            marginTop: height * 0.007,
+                            marginTop: height * 0.015,
                             width: width * 0.7,
                             backgroundColor: COLORS.lightGreen,
                             padding: height * 0.012,

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { height, width } from "./sizeContext";
+import { height, scaleWidth, width } from "./sizeContext";
 
 export const fontColors = {
   white: "#ffffff",
@@ -50,8 +50,8 @@ export const backgroundScreen = "#252c4a";
 
 const styles = StyleSheet.create({
   screen: {
-    marginTop: width * 0.1,
-    padding: width * 0.05,
+    marginTop: scaleWidth(60),
+    padding: scaleWidth(20),
   },
   bottom: {
     paddingBottom: height * 0.12,

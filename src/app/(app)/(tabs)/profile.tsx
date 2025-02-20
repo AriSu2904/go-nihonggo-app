@@ -15,6 +15,7 @@ import { HistoryUser, useHistoryUserQuiz } from "@/queries/historyQuery";
 import { mockData } from "@/lib/dev/mock-data";
 import { generateQuizName } from "@/utils/materialUtil";
 import { useSession } from "@/contexts/auth.context";
+import { set } from "react-hook-form";
 
 export default function ProfileScreen() {
   const [profileData, setProfileData] = useState<StudentResponse | null>(null);
@@ -108,7 +109,8 @@ export default function ProfileScreen() {
                 className="rounded-full border-4 border-[#FAC577]"
                 style={{
                   width: width * 0.4,
-                  height: height * 0.2,
+                  height: width * 0.4,
+                  borderRadius: (width * 0.4) / 2,
                   borderWidth: width * 0.015,
                 }}
               />

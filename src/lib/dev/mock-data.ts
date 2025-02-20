@@ -152,6 +152,75 @@ export const mockData = {
         },
         status: "Non-Aktif-2024/2025 Ganjil",
         studentId: "220401010000"
-    }
+    },
+    histories: [
+        {
+          "id": "9b680076-5399-4ae5-a291-3ec6ab9f76b5",
+          "inquiryUsed": false,
+          "materialParent": "HIRAGANA",
+          "quizId": "216fb048-2693-45db-840a-2d68f58213ad",
+          "quizLevel": 1,
+          "scores": [
+            0
+          ],
+          "section": "SECOND",
+          "totalAttempt": 0,
+          "userId": "220401010029"
+        },
+        {
+          "id": "2cd3f898-c89f-4ce1-9d64-ddedcd866e09",
+          "inquiryUsed": true,
+          "materialParent": "HIRAGANA",
+          "quizId": "216fb048-2693-45db-840a-2d68f58213ad",
+          "quizLevel": 1,
+          "scores": [
+            10,
+            0
+          ],
+          "section": "FIRST",
+          "totalAttempt": 1,
+          "userId": "220401010029"
+        },
+        {
+          "id": "fc84d4e5-4ba7-4620-a4f1-fb1a7713e635",
+          "inquiryUsed": true,
+          "materialParent": "HIRAGANA",
+          "quizId": "df3cff54-9917-413f-8f2e-eae28fd7fe2f",
+          "quizLevel": 2,
+          "scores": [
+            10,
+            0
+          ],
+          "section": "FIRST",
+          "totalAttempt": 1,
+          "userId": "220401010029"
+        },
+        {
+          "id": "2ab765f8-0bc6-40b6-8bc3-81f403f6a9cd",
+          "inquiryUsed": false,
+          "materialParent": "HIRAGANA",
+          "quizId": "b488247c-1676-44cb-b301-ee8445e47149",
+          "quizLevel": 3,
+          "scores": [
+            0
+          ],
+          "section": "FIRST",
+          "totalAttempt": 0,
+          "userId": "220401010029"
+        },
+        {
+          "id": "4e30c59e-f41a-41b4-af2d-2153b49ecaeb",
+          "inquiryUsed": false,
+          "materialParent": "KATAKANA",
+          "quizId": "601de146-1712-4e7f-809c-abdd9bc3efb4",
+          "quizLevel": 1,
+          "scores": [
+            0
+          ],
+          "section": "FIRST",
+          "totalAttempt": 0,
+          "userId": "220401010029"
+        }
+      ]
 }
 
